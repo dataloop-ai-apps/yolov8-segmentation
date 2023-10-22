@@ -6,6 +6,7 @@ import dtlpy as dl
 from PIL import Image
 import cv2
 import numpy as np
+import tqdm
 import logging
 import os
 
@@ -36,12 +37,18 @@ class Adapter(dl.BaseModelAdapter):
                     item_height = item_info.get('metadata', {}).get('system', {}).get('height', 0)
                     annotations = list()
                     for ann in item_info.get("annotations", []):
+                        valid = True
                         annotation_line = [self.configuration.get("label_to_id_map", {}).get(ann.get("label"))]
                         for coordinates in ann.get("coordinates", []):
-                            for coordinate in coordinates:
-                                annotation_line.append(coordinate['x'] / item_width)
-                                annotation_line.append(coordinate['y'] / item_height)
-                        annotations.append(' '.join([str(el) for el in annotation_line]))
+                            if isinstance(coordinates, list):
+                                for coordinate in coordinates:
+                                    annotation_line.append(coordinate['x'] / item_width)
+                                    annotation_line.append(coordinate['y'] / item_height)
+                            elif isinstance(coordinates, dict) and 'x' in coordinates.keys():
+                                valid = False
+                                break
+                        if valid:
+                            annotations.append(' '.join([str(el) for el in annotation_line]))
                 labels_file_path = os.path.join(labels_path, os.path.splitext(json_file_path)[0] + '.txt')
                 with open(labels_file_path, 'w') as labels_file:
                     labels_file.write('\n'.join(annotations))
@@ -66,7 +73,7 @@ class Adapter(dl.BaseModelAdapter):
         batch_size = self.configuration.get('batch_size', 2)
         imgsz = self.configuration.get('imgsz', 640)
         device = self.configuration.get('device', 'cpu')
-        augment = self.configuration.get('augment', True)
+        augment = self.configuration.get('augment', False)
         yaml_config = self.configuration.get('yaml_config', dict())
 
         project_name = os.path.dirname(output_path)
@@ -184,10 +191,10 @@ class Adapter(dl.BaseModelAdapter):
 
 def package_creation(project: dl.Project):
     metadata = dl.Package.get_ml_metadata(cls=Adapter,
-                                          default_configuration={'weights_filename': 'yolov8m-seg.pt',
-                                                                 'epochs': 10,
+                                          default_configuration={'weights_filename': 'yolov8l-seg.pt',
+                                                                 'epochs': 25,
                                                                  'batch_size': 8,
-                                                                 'imgsz': 640,
+                                                                 'imgsz': 960,
                                                                  'conf_thres': 0.25,
                                                                  'iou_thres': 0.45,
                                                                  'max_det': 1000,
@@ -200,8 +207,10 @@ def package_creation(project: dl.Project):
     package = project.packages.push(package_name='yolov8-seg',
                                     src_path=os.getcwd(),
                                     # description='Global Dataloop Yolo V8 implementation in pytorch',
-                                    is_global=True,
+                                    is_global=False,
                                     package_type='ml',
+                                    # codebase=dl.GitCodebase(git_url='https://github.com/dataloop-ai-apps/yolov8.git',
+                                    #                         git_tag='v0.1.13'),
                                     modules=[modules],
                                     service_config={
                                         'runtime': dl.KubernetesRuntime(pod_type=dl.INSTANCE_CATALOG_GPU_K80_M,
@@ -218,19 +227,20 @@ def package_creation(project: dl.Project):
     return package
 
 
-def model_creation(package: dl.Package):
+def model_creation(package: dl.Package, dataset: dl.Dataset):
     import ultralytics
     labels = ultralytics.YOLO().names
+    labels = {i:l.tag for i,l in enumerate(dataset.labels)}
 
-    model = package.models.create(model_name='yolov8l-seg',
+    model = package.models.create(model_name='yolov8large-seg',
                                   description='yolov8 for image segmentation',
                                   tags=['yolov8', 'pretrained', 'segmentation'],
-                                  dataset_id=None,
+                                  dataset_id=dataset.id,
                                   status='created',
-                                  scope='public',
+                                  scope='project',
                                   configuration={
-                                      'weights_filename': 'yolov8m-seg.pt',
-                                      'imgz': 640,
+                                      'weights_filename': 'yolov8l-seg.pt',
+                                      'imgz': 960,
                                       'device': 'cuda:0',
                                       'id_to_label_map': labels,
                                       'label_to_id_map': {v: k for k, v in labels.items()}
@@ -245,13 +255,14 @@ def model_creation(package: dl.Package):
 
 def deploy():
     dl.setenv('prod')
-    project_name = '<enter-project-name>'
+    project_name = '<insert-project-name>'
     project = dl.projects.get(project_name)
+    dataset = project.datasets.get("<insert-dataset-name>")
     package = package_creation(project=project)
     print(f'new mode pushed. codebase: {package.codebase}')
-    model = model_creation(package=package)
+    model = model_creation(package=package, dataset=dataset)
     return model
 
 
 if __name__ == "__main__":
-    model = deploy()
+    deploy()
