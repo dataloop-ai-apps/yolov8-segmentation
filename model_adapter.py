@@ -41,22 +41,21 @@ class Adapter(dl.BaseModelAdapter):
                                 for coordinate in coordinates:
                                     annotation_line.append(coordinate['x'] / item_width)
                                     annotation_line.append(coordinate['y'] / item_height)
-                            elif isinstance(coordinates, dict) and 'x' in coordinates.keys():
+                            else:
+                                logger.error(f"Coordinates of invalid type: {type(coordinates)}")
                                 valid = False
                                 break
-                        if valid:
+                        if valid is True:
                             annotations.append(' '.join([str(el) for el in annotation_line]))
                 labels_file_path = os.path.join(labels_path, os.path.splitext(json_file_path)[0] + '.txt')
                 with open(labels_file_path, 'w') as labels_file:
                     labels_file.write('\n'.join(annotations))
 
-
-
     def load(self, local_path, **kwargs):
-        model_filename = self.configuration.get('weights_filename', 'yolov8m-seg.pt')
+        model_filename = self.configuration.get('weights_filename', 'yolov8l-seg.pt')
         model_filepath = os.path.join(local_path, model_filename)
         # first load official model -https://github.com/ultralytics/ultralytics/issues/3856
-        _ = YOLO('yolov8m-seg.pt')
+        _ = YOLO('yolov8l-seg.pt')
         if os.path.isfile(model_filepath):
             model = YOLO(model_filepath)  # pass any model type
         else:
@@ -176,9 +175,3 @@ class Adapter(dl.BaseModelAdapter):
                                                       'confidence': float(conf)})
                 batch_annotations.append(image_annotations)
         return batch_annotations
-
-    def export(self):
-        model = YOLO("model.pt")
-        model.fuse()
-        model.info(verbose=True)  # Print model information
-        model.export(format='')

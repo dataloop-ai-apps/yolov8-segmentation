@@ -5,7 +5,7 @@ import argparse
 from model_adapter import Adapter
 
 
-def package_creation(project: dl.Project):
+def package_creation(project: dl.Project) -> dl.Package:
     metadata = dl.Package.get_ml_metadata(cls=Adapter,
                                           default_configuration={'weights_filename': 'yolov8l-seg.pt',
                                                                  'epochs': 25,
@@ -40,11 +40,11 @@ def package_creation(project: dl.Project):
     return package
 
 
-def model_creation(package: dl.Package, dataset: dl.Dataset):
+def model_creation(package: dl.Package, dataset: dl.Dataset, model_name: str) -> dl.Model:
     labels = {i: l.tag for i, l in enumerate(dataset.labels)}
 
     model = package.models.create(
-        model_name='yolov8large-seg',
+        model_name=model_name,
         description='yolov8 for image segmentation',
         tags=['yolov8', 'pretrained', 'segmentation'],
         dataset_id=dataset.id,
@@ -67,9 +67,10 @@ def model_creation(package: dl.Package, dataset: dl.Dataset):
 
 def parse_args():
     arg_parser= argparse.ArgumentParser()
-    arg_parser.add_argument("--env", "-e", type=str, help="Environment (prod or rc)")
+    arg_parser.add_argument("--env", "-e", type=str, default="prod", help="Environment (prod or rc)")
     arg_parser.add_argument("--project", "-p", type=str, help="Project name")
     arg_parser.add_argument("--dataset", "-d", type=str, help="Dataset name")
+    arg_parser.add_argument("--modelname", "-m", type=str, default="yolov8seg", help="Model name to be created")
     return arg_parser.parse_args()
 
 
@@ -78,11 +79,12 @@ if __name__ == "__main__":
     env = args.env
     project_name = args.project
     dataset_name = args.dataset
+    model_name = args.modelname
     dl.setenv(env)
     project = dl.projects.get(project_name)
     package = package_creation(project)
     dataset = project.datasets.get(dataset_name)
-    model = model_creation(package, dataset)
+    model = model_creation(package, dataset, model_name)
     print(
         f"Model {model.name} created with dataset {dataset.name}"
         f"with package {package.name} in project {project.name}!"
