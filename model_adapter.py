@@ -2,10 +2,11 @@ import dtlpy as dl
 import json
 import logging
 import os
+import torch
 
 from PIL import Image
-from ultralytics.models import YOLO
-from ultralytics.utils import yaml_save
+from ultralytics import YOLO
+from ultralytics.yolo.utils import yaml_save
 
 logger = logging.getLogger('YOLOv8SegmentationAdapter')
 
@@ -19,11 +20,41 @@ class Adapter(dl.BaseModelAdapter):
         self.configuration.update({'weights_filename': 'weights/best.pt'})
 
     def convert_from_dtlpy(self, data_path, **kwargs):
+        ##############
+        # Validation #
+        ##############
+
+        subsets = self.model_entity.metadata.get("system", dict()).get("subsets", None)
+        if 'train' not in subsets:
+            raise ValueError(
+                'Couldnt find train set. Yolov8 requires train and validation set for training. '
+                'Add a train set DQL filter in the dl.Model metadata'
+                )
+        if 'validation' not in subsets:
+            raise ValueError(
+                'Couldnt find validation set. Yolov8 requires train and validation set for training. '
+                'Add a validation set DQL filter in the dl.Model metadata'
+                )
+
+        filters = dl.Filters(field='type', values='segment', resource=dl.FiltersResource.ANNOTATION)
+        filters.page_size = 0
+        pages = self.model_entity.dataset.items.list(filters=filters)
+        if pages.items_count == 0:
+            raise ValueError(
+                f'Could find segment annotations. Cannot train without annotation in the data subsets'
+                )
+
+        #########
+        # Paths #
+        #########
         train_dir = self.model_entity.metadata['system']['subsets']['train']['filter']['$and'][-1]['dir'][1:]
         val_dir = self.model_entity.metadata['system']['subsets']['validation']['filter']['$and'][-1]['dir'][1:]
         train_path = os.path.join(data_path, 'train', 'json', train_dir)
         validation_path = os.path.join(data_path, 'validation', 'json', val_dir)
 
+        ###########
+        # Convert #
+        ###########
         for src_path in [train_path, validation_path]:
             labels_path = os.path.join(os.path.split(src_path)[0], 'labels')
             os.makedirs(labels_path, exist_ok=True)
@@ -68,9 +99,12 @@ class Adapter(dl.BaseModelAdapter):
         epochs = self.configuration.get('epochs', 50)
         batch_size = self.configuration.get('batch_size', 2)
         imgsz = self.configuration.get('imgsz', 640)
-        device = self.configuration.get('device', 'cpu')
+        device = self.configuration.get('device', None)
         augment = self.configuration.get('augment', False)
         yaml_config = self.configuration.get('yaml_config', dict())
+
+        if device is None:
+            device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
         project_name = os.path.dirname(output_path)
         name = os.path.basename(output_path)
@@ -97,9 +131,35 @@ class Adapter(dl.BaseModelAdapter):
         if not os.path.exists(dst_labels_path_val) and os.path.exists(src_labels_path_val):
             os.rename(src_labels_path_val, dst_labels_path_val)
 
-        # validation_images_path
-        # train_lables_path
-        # train_images_path
+            # yolov8 bug - if there are two directories "images" in the path it fails to get annotations
+            paths = [dst_images_path_train, dst_images_path_val, dst_labels_path_train, dst_labels_path_val]
+            allowed = [1, 1, 0, 0]
+            for path, allow in zip(paths, allowed):
+                subfolders = [x[0] for x in os.walk(path)]
+                for subfolder in subfolders:
+                    relpath = os.path.relpath(subfolder, data_path)
+                    dirs = relpath.split(os.sep)
+                    c = 0
+                    for i_dir, dirname in enumerate(dirs):
+                        if dirname == 'images':
+                            c += 1
+                            if c > allow:
+                                dirs[i_dir] = 'imagesssss'
+                    new_subfolder = os.path.join(data_path, *dirs)
+                    if subfolder != new_subfolder:
+                        print(new_subfolder)
+                        os.rename(subfolder, new_subfolder)
+
+            # check if validation exists
+            if not os.path.isdir(dst_images_path_val):
+                raise ValueError(
+                    'Couldnt find validation set. Yolov8 requires train and validation set for training. '
+                    'Add a validation set DQL filter in the dl.Model metadata'
+                    )
+            if len(self.model_entity.labels) == 0:
+                raise ValueError(
+                    'model.labels is empty. Model entity must have labels'
+                    )
 
         yaml_config.update(
             {'path': os.path.realpath(data_path),  # must be full path otherwise the train adds "datasets" to it
@@ -169,6 +229,8 @@ class Adapter(dl.BaseModelAdapter):
                     cls, conf = box.cls.squeeze(), box.conf.squeeze()
                     c = int(cls)
                     label = res.names[c]
+                    if label not in list(self.configuration.get("label_to_id_map", {}).keys()):
+                        logger.error(f"Predict label {label} is not among the models' labels.")
                     image_annotations.add(annotation_definition=dl.Polygon(geo=mask.xy[0], label=label),
                                           model_info={'name': self.model_entity.name,
                                                       'model_id': self.model_entity.id,
