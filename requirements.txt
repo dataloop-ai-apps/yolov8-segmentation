@@ -1,0 +1,2 @@
+ultralytics
+pillow>=9.5.0
