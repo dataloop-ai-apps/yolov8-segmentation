@@ -29,52 +29,20 @@ YOLOv8 segmentation achieves state of the art results in the task of identifying
 
 To install the package and create the YOLOv8 model adapter, you will need a [project](https://developers.dataloop.ai/tutorials/getting_started/sdk_overview/chapter/#to-create-a-new-project) and a [dataset](https://developers.dataloop.ai/tutorials/data_management/manage_datasets/chapter/#create-dataset) in the Dataloop platform. The dataset should have [directories](https://developers.dataloop.ai/tutorials/data_management/manage_datasets/chapter/#create-directory) containing its training and validation subsets.
 
-Once this is setup, run the ```createmodel.py``` script contained in this repo, with the project and dataset names:
+### Installing in the Platform
 
-```bash
-python createmodel.py -p <project-name> -d <dataset-name> [-e <prod-or-rc> -m <model-name>]
-```
+### Installing via the SDK
 
-The ```-p``` option should be followed by the chosen project name, ```-d``` by the dataset name. There are two optional flags: ```-e``` chooses the environent (either production or rc, production by default) and ```-m``` allows to set a custom name for the installed model (it's installed as yolov8seg by default).
 
-## Training
+## Training and Finetuning
 
-Training YOLOv8 segmentation can either be done via the platform or the SDK. For either purpose, it is necessary to first set the models subsets for training and validation. This can be done via the SDK, once you get the YOLOv8segmentation's model id. Getting the model id can be done either via the platform or the SDK:
+Training YOLOv8 segmentation can either be done via the platform or the SDK. For either purpose, it is necessary to first set the models subsets for training and validation. In the previous step, you saw how to define the train and validation subsets when creating your copy of the model. If you wish to do this via the SDK or modify them, you can follow [these instructions](https://developers.dataloop.ai/tutorials/model_management/ai_library/chapter/#define-dataset-subsets).
 
-```python
-project = dl.projects.get('<project-name>')
-project.models.list().print()
-```
-
-should display a table with all the models in the project along with their id's. Or, via the platform, go to the Model Management page, find the YOLOv8 segmentation model in the list, and click in the three dots in the right end of its row and copy the id:
-<img width="143" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/7e18b364-84b0-4257-947c-a5b7405a4da7">
-
-and then, define the subsets:
-
-```python
-model_entity = dl.models.get(model_id=<yolov8seg-model-id>)
-model_entity.metadata['system'] = dict() if not model_entity.metadata.get('system', False) else model_entity.metadata['system']
-model_entity.metadata['system']['subsets'] = {
-    'train': {'filter': dl.Filters(field='dir', values='<trainset-directory>')},
-    'validation': {'filter': dl.Filters(field='dir', values='<valset-directory>')}
-}
-model_entity.update(system_metadata=True)
-```
-where you should fill the ```<trainset-directory>``` and ```<valset-directory>``` with the name of the respective directories for these subsets in your dataset.
+**ATTENTION:** To ensure that training will be successful, verify that the items in the dataset are annotated with annotations of type **polygon**. 
 
 ### Editing the configuration
 
-To edit configurations via the platform, go to the YOLOv8-segmentation page in the Model Management and edit the json file displayed there:
-
-<img width="945" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/4c4186fd-535e-4968-81a0-730b6696445d">
-
-or, via the SDK, by editing the model configuration:
-
-```python
-model_entity = dl.models.get(model_id='<yolov8seg-model-id>')
-model_entity.configuration = {...}
-model_entity.update()
-```
+To edit configurations via the platform, go to the YOLOv8-segmentation page in the Model Management and edit the json file displayed there or, via the SDK, by editing the model configuration. Click [here](https://developers.dataloop.ai/tutorials/model_management/ai_library/chapter/#model-configuration) for more information.
 
 These are the keys that can be configured:
 
@@ -89,31 +57,53 @@ These are the keys that can be configured:
 
 ### Training with the Platform
 
+In the Model Management page of your project, find a version of your YOLOv8-segmentation model with the status **created** and click the three dots in the right of the model's row and select the "Train" option:
+
+<img width="1421" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/42dc335b-bae3-4992-97d9-47030e1f95da">
+
+Edit the configuration for this specific run of the training, and choose which instance in which it will run:
+
+<img width="674" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/a370c8c7-fcdf-4215-8268-b810055fefca">
+
+and select the service fields (more information [here](https://developers.dataloop.ai/tutorials/faas/custom_environment_using_docker/chapter/)):
+
+<img width="674" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/e2cb2587-d85d-4dd3-baec-0c3703cc8da1">
+
+Now kick back and wait for the training to finish.
+
 ### Training with the SDK
 
 To train the model with the SDK, get the model id and define the service configuration for its training:
 
 ```python
 model_entity = dl.models.get(model_id='<yolov8seg-model-id>')
-ex = model_id.train(service_config={
-    'runtime': dl.KubernetesRuntime(pod_type=dl.INSTANCE_CATALOG_GPU_K80_S,
-                                    autoscaler=dl.KubernetesRabbitmqAutoscaler(
-                                        min_replicas=0,
-                                        max_replicas=1),
-                                    preemptible=False,
-                                    concurrency=1).to_json(),
-    'executionTimeout': 10000 * 3600
-})
+ex = model_entity.train()
 ex.logs(follow=True)  # to stream the logs during training
 custom_model = dl.models.get(model_id=model_entity.id)
 print(custom_model.status)
 ```
 
+For more information on how to customize the service configuration that will run the training, check the [documentation](https://developers.dataloop.ai/tutorials/model_management/ai_library/chapter/#train).
+
 ## Deployment
 
-Once the model is trained, it is necessary to deploy it so it can be used for evaluation and prediction.
+After installing the pretrained model or finetuning it on your data, it is necessary to deploy it so it can be used for prediction.
 
 ### Deploying with the Platform
+
+In the Model Management page of your project, find a pretrained or finetuned version of your YOLOv8-segmentation model and click the three dots in the right of the model's row and select the "Deploy" option:
+
+<img width="1430" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/413324a5-251f-459c-998b-72022e13c5be">
+
+Here you can choose the instance, minimum and maximum number of replicas and queue size of the service that will run the deployed model (for more information on these parameters, check [the documentation](https://developers.dataloop.ai/tutorials/faas/advance/chapter/#autoscaler)):
+
+<img width="679" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/8d56ee37-94ea-4971-9ceb-511648d58d4f">
+
+Proceed to the next page and define the service fields (which are explained [here](https://developers.dataloop.ai/tutorials/faas/custom_environment_using_docker/chapter/)).
+
+<img width="679" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/71690c05-0049-45fd-b83b-34e30e2d8ff2">
+
+After this, your model is deployed and ready to run inference.
 
 ### Deploying with the SDK
 
@@ -121,9 +111,10 @@ To deploy with the default service configuration defined in the package:
 
 ```python
 model_entity = dl.models.get(model_id='<model-id>')
-model_entity.status = 'deployed'
-model_entity.update()
+model_entity.deploy()
 ```
+
+For more information and how to set specific service settings for the deployed model, check the [documentation](https://developers.dataloop.ai/tutorials/model_management/ai_library/chapter/#clone-and-deploy-a-model).
 
 ## Testing
 
@@ -141,7 +132,11 @@ click the test button and wait for the prediction to be done:
 
 The best way to perform predictions in the platform is to add a Predict Node to a pipeline:
 
+Click [here](https://developers.dataloop.ai/onboarding/08_pipelines/) for more information on Dataloop Pipelines.
+
 ### Predicting with the SDK
+
+The deployed model can be used to run prediction on batches of images:
 
 ```python
 model_entity = dl.models.get(model_id='<model-id>')
@@ -153,6 +148,8 @@ results = model_entity.predict_items([item_0, item_1, ..., item_n], upload_annot
 print(results)
 ```
 
+For more information and options, [check the documentation](https://developers.dataloop.ai/tutorials/model_management/ai_library/chapter/#predict-items).
+
 ## Sources and Further Reading
 
-*[Ultralytics documentation](https://docs.ultralytics.com/)
+* [Ultralytics documentation](https://docs.ultralytics.com/)
