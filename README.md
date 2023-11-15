@@ -2,14 +2,18 @@
 
 ## Introduction
 
-This repo is a model integration between [Ultralytics Yolov8](https://github.com/ultralytics/ultralytics) segmentation mode and [Dataloop](https://dataloop.ai/)  
+This repo is a model integration between [Ultralytics Yolov8](https://github.com/ultralytics/ultralytics) segmentation model and [Dataloop](https://dataloop.ai/)  
 For the object detection YOLOv8 adapter, check out [this repo](https://github.com/dataloop-ai-apps/yolov8/).
 
-Ultralytics YOLOv8 represents a modernized iteration, refining the successes of prior YOLO models. With added features and improvements, it aims to enhance both performance and versatility. YOLOv8 prioritizes speed, accuracy, and user-friendly design, making it a reliable option for tasks like object detection, tracking, instance segmentation, image classification, and pose estimation. In this repo we implement the integration between YOLOv8 in its segmentation mode with our Dataloop platform.
+Ultralytics YOLOv8 represents a modernized iteration, refining the successes of prior YOLO models. With added features and improvements, it aims to enhance both performance and versatility. YOLOv8 prioritizes speed, accuracy, and user-friendly design, making it a reliable option for tasks like object detection, tracking, instance segmentation, image classification, and pose estimation. In this repo we implement the integration between YOLOv8 in its segmentation model with our Dataloop platform.
 
 YOLOv8 segmentation achieves state of the art results in the task of identifying objects in images while also outlying its contours, like in the following images that display its results in a variety of tasks:
 
-[<img width="479" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/376c65a9-01f6-4d15-9979-d904bc2c36a2">
+<img width="1218" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/0dd04299-a163-45fd-a142-c68a3c52e37b">
+
+<img width="1218" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/9832ceba-7737-42fb-ab40-3d706177a6f8">
+
+<img width="1218" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/59f36c0e-0303-4865-acbf-c68d5d13d421">
 
 
 ## Requirements
@@ -73,14 +77,15 @@ model_entity.update()
 ```
 
 These are the keys that can be configured:
-*```epochs```: number of epochs to train the model (default: 50)
-*```batch_size```: batch size to be used during the training (default: 2)
-*```imgsz```: the size (imgsz x imgsz) to which images are reshaped before going through the model (default: 640)
-*```device```: whether to train on ```cpu``` or ```cuda``` (default to automatic detection of whether the instance has a GPU)
-*```augment```: boolean, ```True``` if you wish to use ultralytics' augmentation techniques on the training data (default: ```False```)
-*```labels```: The labels over which the model will train and predict (defaults to the labels in the model's dataset's recipe)
-*```id_to_label_map```: Dictionary mapping numbers to labels to guide the model outputs
-*```label_to_id_map```: Inverse map from ```id_to_label_map```
+
+* ```epochs```: number of epochs to train the model (default: 50)
+* ```batch_size```: batch size to be used during the training (default: 2)
+* ```imgsz```: the size (imgsz x imgsz) to which images are reshaped before going through the model (default: 640)
+* ```device```: whether to train on ```cpu``` or ```cuda``` (default to automatic detection of whether the instance has a GPU)
+* ```augment```: boolean, ```True``` if you wish to use ultralytics' augmentation techniques on the training data (default: ```False```)
+* ```labels```: The labels over which the model will train and predict (defaults to the labels in the model's dataset's recipe)
+* ```id_to_label_map```: Dictionary mapping numbers to labels to guide the model outputs
+* ```label_to_id_map```: Inverse map from ```id_to_label_map```
 
 ### Training with the Platform
 
@@ -122,18 +127,13 @@ model_entity.update()
 
 ## Testing
 
-Once the model is deployed, you can test it by going to the Model Management, selecting the YOLOv8-segmentation model and then going to the test tab:
+Once the model is deployed, you can test it by going to the Model Management, selecting the YOLOv8-segmentation model and then going to the test tab. Drag and drop or select an image to the image area:
 
-<img width="1419" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/8d8d5866-a51a-4f70-a292-1455ecff3326">
-
-
-Drag and drop or select an image to the image area:
-
-<img width="1419" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/33f6938b-bc7a-4016-a85d-5a3bf4a94800">
+<img width="1218" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/194c0085-88a9-476a-90e4-efdf4e07070e">
 
 click the test button and wait for the prediction to be done:
 
-<img width="1419" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/03d3a0f2-58bb-4337-b719-4e6d9374cabd">
+<img width="1218" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/074e0281-bd7a-4913-8e39-10b4d6998efc">
 
 ## Prediction
 
