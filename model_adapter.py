@@ -40,13 +40,14 @@ class Adapter(dl.BaseModelAdapter):
                 'Add a validation set DQL filter in the dl.Model metadata'
                 )
 
-        filters = dl.Filters(field='type', values='segment', resource=dl.FiltersResource.ANNOTATION)
-        filters.page_size = 0
-        pages = self.model_entity.dataset.items.list(filters=filters)
-        if pages.items_count == 0:
-            raise ValueError(
-                f'Could find segment annotations. Cannot train without annotation in the data subsets'
-                )
+        for subset, filters_dict in subsets.items():
+            filters = dl.Filters(custom_filter=filters_dict)
+            filters.add_join(field='type', values='segment')
+            filters.page_size = 0
+            pages = self.model_entity.dataset.items.list(filters=filters)
+            if pages.items_count == 0:
+                raise ValueError(
+                    f'Could find box annotations in subset {subset}. Cannot train without annotation in the data subsets')
 
         #########
         # Paths #
@@ -135,35 +136,35 @@ class Adapter(dl.BaseModelAdapter):
         if not os.path.exists(dst_labels_path_val) and os.path.exists(src_labels_path_val):
             os.rename(src_labels_path_val, dst_labels_path_val)
 
-            # yolov8 bug - if there are two directories "images" in the path it fails to get annotations
-            paths = [dst_images_path_train, dst_images_path_val, dst_labels_path_train, dst_labels_path_val]
-            allowed = [1, 1, 0, 0]
-            for path, allow in zip(paths, allowed):
-                subfolders = [x[0] for x in os.walk(path)]
-                for subfolder in subfolders:
-                    relpath = os.path.relpath(subfolder, data_path)
-                    dirs = relpath.split(os.sep)
-                    c = 0
-                    for i_dir, dirname in enumerate(dirs):
-                        if dirname == 'images':
-                            c += 1
-                            if c > allow:
-                                dirs[i_dir] = 'imagesssss'
-                    new_subfolder = os.path.join(data_path, *dirs)
-                    if subfolder != new_subfolder:
-                        print(new_subfolder)
-                        os.rename(subfolder, new_subfolder)
+        # yolov8 bug - if there are two directories "images" in the path it fails to get annotations
+        paths = [dst_images_path_train, dst_images_path_val, dst_labels_path_train, dst_labels_path_val]
+        allowed = [1, 1, 0, 0]
+        for path, allow in zip(paths, allowed):
+            subfolders = [x[0] for x in os.walk(path)]
+            for subfolder in subfolders:
+                relpath = os.path.relpath(subfolder, data_path)
+                dirs = relpath.split(os.sep)
+                c = 0
+                for i_dir, dirname in enumerate(dirs):
+                    if dirname == 'images':
+                        c += 1
+                        if c > allow:
+                            dirs[i_dir] = 'imagesssss'
+                new_subfolder = os.path.join(data_path, *dirs)
+                if subfolder != new_subfolder:
+                    print(new_subfolder)
+                    os.rename(subfolder, new_subfolder)
 
-            # check if validation exists
-            if not os.path.isdir(dst_images_path_val):
-                raise ValueError(
-                    'Couldnt find validation set. Yolov8 requires train and validation set for training. '
-                    'Add a validation set DQL filter in the dl.Model metadata'
-                    )
-            if len(self.model_entity.labels) == 0:
-                raise ValueError(
-                    'model.labels is empty. Model entity must have labels'
-                    )
+        # check if validation exists
+        if not os.path.isdir(dst_images_path_val):
+            raise ValueError(
+                'Couldnt find validation set. Yolov8 requires train and validation set for training. '
+                'Add a validation set DQL filter in the dl.Model metadata'
+                )
+        if len(self.model_entity.labels) == 0:
+            raise ValueError(
+                'model.labels is empty. Model entity must have labels'
+                )
 
         yaml_config.update(
             {'path': os.path.realpath(data_path),  # must be full path otherwise the train adds "datasets" to it
