@@ -3,12 +3,16 @@ import json
 import logging
 import os
 import torch
+import PIL
 
 from PIL import Image
 from ultralytics import YOLO
 from ultralytics.yolo.utils import yaml_save
 
 logger = logging.getLogger('YOLOv8SegmentationAdapter')
+
+# set max image size
+PIL.Image.MAX_IMAGE_PIXELS = 933120000
 
 
 @dl.Package.decorators.module(description='Model Adapter for Yolov8 object segmentation',
