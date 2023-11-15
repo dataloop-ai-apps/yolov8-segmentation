@@ -61,8 +61,7 @@ class Adapter(dl.BaseModelAdapter):
         # Convert #
         ###########
         for src_path in [train_path, validation_path]:
-            labels_path_root = 'train' if src_path == train_path else 'validation'
-            labels_path = os.path.join(data_path, labels_path_root, 'images', 'labels')
+            labels_path = os.path.join(data_path, 'train' if src_path == train_path else 'validation', 'json', 'labels')
             os.makedirs(labels_path, exist_ok=True)
             for json_file_path in os.listdir(src_path):
                 with open(os.path.join(src_path, json_file_path), 'r') as json_file:
@@ -94,10 +93,10 @@ class Adapter(dl.BaseModelAdapter):
         # first load official model -https://github.com/ultralytics/ultralytics/issues/3856
         _ = YOLO('yolov8l-seg.pt')
         if os.path.isfile(model_filepath):
-            model = YOLO(model_filepath)  # pass any model type
+            model = YOLO(model_filepath) 
         else:
             logger.warning(f'Model path ({model_filepath}) not found! loading default model weights')
-            model = YOLO(model_filename)  # pass any model type
+            model = YOLO('yolov8l-seg.pt') 
         self.model = model
 
     def train(self, data_path, output_path, **kwargs):

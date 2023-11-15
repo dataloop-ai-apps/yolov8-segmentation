@@ -342,3 +342,4 @@ pyrightconfig.json
 debugs
 tmp
 *.pt
+weights/
