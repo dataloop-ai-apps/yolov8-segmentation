@@ -33,6 +33,16 @@ To install the package and create the YOLOv8 model adapter, you will need a [pro
 
 ### Installing via the SDK
 
+To install YOLOv8-segmentation via SDK, all that is necessary is to clone the model from the AI Library to your own project:
+
+```python
+public_model = dl.models.get(model_name="yolov8-seg")
+model = project.models.clone(from_model=public_model,
+                             model_name='resnet_50',
+                             project_id=project.id)
+```
+
+For more options when installing the model, check this [page](https://developers.dataloop.ai/tutorials/model_management/ai_library/chapter/#finetune-on-a-custom-dataset).
 
 ## Training and Finetuning
 
@@ -131,6 +141,8 @@ click the test button and wait for the prediction to be done:
 ### Predicting in the Platform
 
 The best way to perform predictions in the platform is to add a Predict Node to a pipeline:
+
+<img width="873" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/d52ac35b-4982-472d-8a82-1f5f01b1da89">
 
 Click [here](https://developers.dataloop.ai/onboarding/08_pipelines/) for more information on Dataloop Pipelines.
 
