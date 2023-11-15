@@ -62,7 +62,7 @@ class Adapter(dl.BaseModelAdapter):
         ###########
         for src_path in [train_path, validation_path]:
             labels_path_root = 'train' if src_path == train_path else 'validation'
-            labels_path = os.path.join(labels_path_root, 'images', 'labels')
+            labels_path = os.path.join(data_path, labels_path_root, 'images', 'labels')
             os.makedirs(labels_path, exist_ok=True)
             for json_file_path in os.listdir(src_path):
                 with open(os.path.join(src_path, json_file_path), 'r') as json_file:
