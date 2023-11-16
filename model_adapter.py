@@ -71,7 +71,7 @@ class Adapter(dl.BaseModelAdapter):
                     annotations = list()
                     for ann in item_info.get("annotations", []):
                         valid = True
-                        annotation_line = [self.configuration.get("label_to_id_map", {}).get(ann.get("label"))]
+                        annotation_line = [self.model_entity.label_to_id_map.get(ann.get("label"))]
                         for coordinates in ann.get("coordinates", []):
                             if isinstance(coordinates, list) and len(coordinates) > 0:
                                 for coordinate in coordinates:
