@@ -73,12 +73,14 @@ class Adapter(dl.BaseModelAdapter):
                         valid = True
                         annotation_line = [self.configuration.get("label_to_id_map", {}).get(ann.get("label"))]
                         for coordinates in ann.get("coordinates", []):
-                            if isinstance(coordinates, list):
+                            if isinstance(coordinates, list) and len(coordinates) > 0:
                                 for coordinate in coordinates:
                                     annotation_line.append(coordinate['x'] / item_width)
                                     annotation_line.append(coordinate['y'] / item_height)
                             else:
-                                logger.error(f"Coordinates of invalid type: {type(coordinates)}")
+                                logger.error(f"Coordinates of invalid type ({type(coordinates)}) "
+                                             f"or length ({len(coordinates) if isinstance(coordinates, list) else 'nan'}"
+                                             f")")
                                 valid = False
                                 break
                         if valid is True:
