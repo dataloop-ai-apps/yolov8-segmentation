@@ -24,7 +24,7 @@ def package_creation(project: dl.Project) -> dl.Package:
                                     package_type='ml',
                                     modules=[modules],
                                     codebase=dl.GitCodebase(git_url='https://github.com/dataloop-ai-apps/yolov8-segmentation.git',
-                                                            git_tag='v0.1.1'),
+                                                            git_tag='v0.1.2'),
                                     service_config={
                                         'runtime': dl.KubernetesRuntime(pod_type=dl.INSTANCE_CATALOG_REGULAR_M,
                                                                         runner_image='ultralytics/ultralytics:8.0.183',
