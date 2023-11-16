@@ -166,6 +166,13 @@ class Adapter(dl.BaseModelAdapter):
                 'model.labels is empty. Model entity must have labels'
                 )
 
+        logger.debug(f"Train dir: {os.listdir(os.path.join(data_path, 'train'))}")
+        logger.debug(f"Train dir: {os.listdir(os.path.join(data_path, 'train', 'images'))}")
+        logger.debug(f"Train dir: {os.listdir(os.path.join(data_path, 'train', 'labels'))}")
+        logger.debug(f"Validation dir:{os.listdir(os.path.join(data_path, 'validation'))}")
+        logger.debug(f"Validation dir:{os.listdir(os.path.join(data_path, 'validation', 'images'))}")
+        logger.debug(f"Validation dir:{os.listdir(os.path.join(data_path, 'validation', 'labels'))}")
+
         yaml_config.update(
             {'path': os.path.realpath(data_path),  # must be full path otherwise the train adds "datasets" to it
              'train': 'train',
