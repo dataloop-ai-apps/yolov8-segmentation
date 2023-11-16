@@ -14,7 +14,7 @@ def package_creation(project: dl.Project) -> dl.Package:
                                                                  'iou_thres': 0.45,
                                                                  'max_det': 1000,
                                                                  'augment': False},
-                                          output_type=dl.AnnotationType.SEGMENTATION,
+                                          output_type=dl.AnnotationType.POLYGON,
                                           )
     modules = dl.PackageModule.from_entry_point(entry_point='model_adapter.py')
 
