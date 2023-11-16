@@ -168,8 +168,8 @@ class Adapter(dl.BaseModelAdapter):
 
         yaml_config.update(
             {'path': os.path.realpath(data_path),  # must be full path otherwise the train adds "datasets" to it
-             'train': 'train/images',
-             'val': 'validation/images',
+             'train': 'train',
+             'val': 'validation',
              'names': self.model_entity.labels
              })
         data_yaml_filename = os.path.join(data_path, f'{self.model_entity.dataset_id}.yaml')
