@@ -38,7 +38,7 @@ To install YOLOv8-segmentation via SDK, all that is necessary is to clone the mo
 ```python
 public_model = dl.models.get(model_name="yolov8-seg")
 model = project.models.clone(from_model=public_model,
-                             model_name='resnet_50',
+                             model_name='yolov8-seg-clone',
                              project_id=project.id)
 ```
 
