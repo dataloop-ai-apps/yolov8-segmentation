@@ -109,7 +109,7 @@ class Adapter(dl.BaseModelAdapter):
         yaml_config = self.configuration.get('yaml_config', dict())
 
         if device is None:
-            device = 'cuda' if torch.cuda.is_available() else 'cpu'
+            device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
 
         project_name = os.path.dirname(output_path)
         name = os.path.basename(output_path)
