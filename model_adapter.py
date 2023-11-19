@@ -42,12 +42,13 @@ class Adapter(dl.BaseModelAdapter):
 
         for subset, filters_dict in subsets.items():
             filters = dl.Filters(custom_filter=filters_dict)
-            filters.add_join(field='type', values='segment')
+            filters.add_join(field='type', values=['segment', 'polygon'], operator=dl.FILTERS_OPERATIONS_IN)
             filters.page_size = 0
             pages = self.model_entity.dataset.items.list(filters=filters)
             if pages.items_count == 0:
                 raise ValueError(
-                    f'Could find box annotations in subset {subset}. Cannot train without annotation in the data subsets')
+                    f'Could not find segment annotations in subset {subset}. '
+                    f'Cannot train without annotation in the data subsets')
 
         #########
         # Paths #
