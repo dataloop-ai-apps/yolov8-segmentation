@@ -2,12 +2,12 @@
 
 ## Introduction
 
-This repo is a model integration between [Ultralytics Yolov8](https://github.com/ultralytics/ultralytics) segmentation model and [Dataloop](https://dataloop.ai/)  
+This repo is a model integration between [Ultralytics YOLOv8](https://github.com/ultralytics/ultralytics) segmentation model and [Dataloop](https://dataloop.ai/)  
 For the object detection YOLOv8 adapter, check out [this repo](https://github.com/dataloop-ai-apps/yolov8/).
 
 Ultralytics YOLOv8 represents a modernized iteration, refining the successes of prior YOLO models. With added features and improvements, it aims to enhance both performance and versatility. YOLOv8 prioritizes speed, accuracy, and user-friendly design, making it a reliable option for tasks like object detection, tracking, instance segmentation, image classification, and pose estimation. In this repo we implement the integration between YOLOv8 in its segmentation model with our Dataloop platform.
 
-YOLOv8 segmentation achieves state of the art results in the task of identifying objects in images while also outlying its contours, like in the following images that display its results in a variety of tasks:
+YOLOv8 segmentation achieves state-of-the-art results in the task of identifying objects in images while also outlying its contours, like in the following images that display its results in a variety of tasks:
 
 <img width="1218" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/0dd04299-a163-45fd-a142-c68a3c52e37b">
 
@@ -22,7 +22,7 @@ YOLOv8 segmentation achieves state of the art results in the task of identifying
 * ultralytics==8.0.17
 * torch==2.0.0
 * pillow>=9.5.0
-* An account in the [Dataloop platform](www.console.dataloop.com)
+* An account in the [Dataloop platform](https://console.dataloop.ai/)
 
   
 ## Installation
@@ -36,6 +36,8 @@ To install the package and create the YOLOv8 model adapter, you will need a [pro
 To install YOLOv8-segmentation via SDK, all that is necessary is to clone the model from the AI Library to your own project:
 
 ```python
+import dtlpy as dl
+project = dl.projects.get('Yolo Project')
 public_model = dl.models.get(model_name="yolov8-seg")
 model = project.models.clone(from_model=public_model,
                              model_name='yolov8-seg-clone',
@@ -44,7 +46,7 @@ model = project.models.clone(from_model=public_model,
 
 For more options when installing the model, check this [page](https://developers.dataloop.ai/tutorials/model_management/ai_library/chapter/#finetune-on-a-custom-dataset).
 
-## Training and Finetuning
+## Training and Fine-tuning
 
 Training YOLOv8 segmentation can either be done via the platform or the SDK. For either purpose, it is necessary to first set the models subsets for training and validation. In the previous step, you saw how to define the train and validation subsets when creating your copy of the model. If you wish to do this via the SDK or modify them, you can follow [these instructions](https://developers.dataloop.ai/tutorials/model_management/ai_library/chapter/#define-dataset-subsets).
 
@@ -97,11 +99,11 @@ For more information on how to customize the service configuration that will run
 
 ## Deployment
 
-After installing the pretrained model or finetuning it on your data, it is necessary to deploy it so it can be used for prediction.
+After installing the pretrained model or fine-tuning it on your data, it is necessary to deploy it, so it can be used for prediction.
 
 ### Deploying with the Platform
 
-In the Model Management page of your project, find a pretrained or finetuned version of your YOLOv8-segmentation model and click the three dots in the right of the model's row and select the "Deploy" option:
+In the Model Management page of your project, find a pretrained or fine-tuned version of your YOLOv8-segmentation model and click the three dots in the right of the model's row and select the "Deploy" option:
 
 <img width="1430" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/413324a5-251f-459c-998b-72022e13c5be">
 
@@ -140,7 +142,7 @@ click the test button and wait for the prediction to be done:
 
 ### Predicting in the Platform
 
-The best way to perform predictions in the platform is to add a Predict Node to a pipeline:
+The best way to perform predictions in the platform is to add a "Predict Node" to a pipeline:
 
 <img width="873" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/d52ac35b-4982-472d-8a82-1f5f01b1da89">
 
