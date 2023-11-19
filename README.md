@@ -9,11 +9,11 @@ Ultralytics YOLOv8 represents a modernized iteration, refining the successes of 
 
 YOLOv8 segmentation achieves state-of-the-art results in the task of identifying objects in images while also outlying its contours, like in the following images that display its results in a variety of tasks:
 
-<img width="1218" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/0dd04299-a163-45fd-a142-c68a3c52e37b">
+<img width="1454" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/865d76a7-dc53-47d6-b5cf-57f18919f601">
 
-<img width="1218" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/9832ceba-7737-42fb-ab40-3d706177a6f8">
+<img width="1454" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/58fa87e8-f398-4e7e-b00e-784a1fff18fc">
 
-<img width="1218" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/59f36c0e-0303-4865-acbf-c68d5d13d421">
+<img width="1454" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/4ca3a84b-d12e-4682-b66e-3c4a8f94fa03">
 
 
 ## Requirements
@@ -30,6 +30,24 @@ YOLOv8 segmentation achieves state-of-the-art results in the task of identifying
 To install the package and create the YOLOv8 model adapter, you will need a [project](https://developers.dataloop.ai/tutorials/getting_started/sdk_overview/chapter/#to-create-a-new-project) and a [dataset](https://developers.dataloop.ai/tutorials/data_management/manage_datasets/chapter/#create-dataset) in the Dataloop platform. The dataset should have [directories](https://developers.dataloop.ai/tutorials/data_management/manage_datasets/chapter/#create-directory) containing its training and validation subsets.
 
 ### Installing in the Platform
+
+In the model management page, choose the AI Library button in the menu and in the drop-down menu, pick "Public Models" to see all the publicly available models. You will see yolov8-seg in the list and you can create a copy of it by selecting the "create model" option as presented here:
+
+<img width="1413" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/5c2ab8c9-4afd-420e-893d-db25e99539d8">
+
+You will be presented with the options to choose name, artifact locatiion and tags:
+
+<img width="676" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/ca7480f7-4fb5-4602-8fcc-734f7b9b8483">
+
+Then to choose between fine tuning or just choosing the pretrained weights from Ultralytics (trained on the COCO dataset). If you choose the pretrained weights, the model will be created with status ```trained```, otherwise, when choosing fine-tuning, you have to select a dataset, define the DQL filter or folder for the training and validation subsets, and choose a recipe for training. The model will be created with status ```created``` and you will need to run the training for it before it can be used.
+
+<img width="676" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/df467411-de86-4b9c-bbba-6f3c0d98a73c">
+
+Lastly, define the model configurations:
+
+<img width="676" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/c2f4ec39-1707-43d6-aece-6c861804adda">
+
+After this, the model will appear in the list of the proejct models in Model Management with the name you chose. It can be trained, evaluated and deployed.
 
 ### Installing via the SDK
 
@@ -56,7 +74,7 @@ Training YOLOv8 segmentation can either be done via the platform or the SDK. For
 
 To edit configurations via the platform, go to the YOLOv8-segmentation page in the Model Management and edit the json file displayed there or, via the SDK, by editing the model configuration. Click [here](https://developers.dataloop.ai/tutorials/model_management/ai_library/chapter/#model-configuration) for more information.
 
-These are the keys that can be configured:
+The basic configurations included are:
 
 * ```epochs```: number of epochs to train the model (default: 50)
 * ```batch_size```: batch size to be used during the training (default: 2)
@@ -67,19 +85,21 @@ These are the keys that can be configured:
 * ```id_to_label_map```: Dictionary mapping numbers to labels to guide the model outputs
 * ```label_to_id_map```: Inverse map from ```id_to_label_map```
 
+Additional configurations shown in the [Ultralytics documentation](https://docs.ultralytics.com/usage/cfg/#train) can be included in a dictionary under the key ```yaml_config```.
+
 ### Training with the Platform
 
 In the Model Management page of your project, find a version of your YOLOv8-segmentation model with the status **created** and click the three dots in the right of the model's row and select the "Train" option:
 
-<img width="1421" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/42dc335b-bae3-4992-97d9-47030e1f95da">
+<img width="1417" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/f9b8b65c-2e45-488e-a1bc-7dde1a47ae22">
 
 Edit the configuration for this specific run of the training, and choose which instance in which it will run:
 
-<img width="674" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/a370c8c7-fcdf-4215-8268-b810055fefca">
+<img width="677" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/69a0e642-b70d-4063-9756-efdb25b44550">
 
 and select the service fields (more information [here](https://developers.dataloop.ai/tutorials/faas/custom_environment_using_docker/chapter/)):
 
-<img width="674" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/e2cb2587-d85d-4dd3-baec-0c3703cc8da1">
+<img width="677" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/272b45e9-f975-4f43-af56-da6a453172b2">
 
 Now kick back and wait for the training to finish.
 
@@ -105,15 +125,15 @@ After installing the pretrained model or fine-tuning it on your data, it is nece
 
 In the Model Management page of your project, find a pretrained or fine-tuned version of your YOLOv8-segmentation model and click the three dots in the right of the model's row and select the "Deploy" option:
 
-<img width="1430" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/413324a5-251f-459c-998b-72022e13c5be">
+<img width="1417" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/3d710956-2128-4964-b8f4-f864fbf18112">
 
 Here you can choose the instance, minimum and maximum number of replicas and queue size of the service that will run the deployed model (for more information on these parameters, check [the documentation](https://developers.dataloop.ai/tutorials/faas/advance/chapter/#autoscaler)):
 
-<img width="679" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/8d56ee37-94ea-4971-9ceb-511648d58d4f">
+<img width="677" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/871c85de-9fc9-44e0-a5c2-86596975ddb9">
 
 Proceed to the next page and define the service fields (which are explained [here](https://developers.dataloop.ai/tutorials/faas/custom_environment_using_docker/chapter/)).
 
-<img width="679" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/71690c05-0049-45fd-b83b-34e30e2d8ff2">
+<img width="677" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/f9b1c3a8-3a7d-4d33-903f-f80a15f27e2d">
 
 After this, your model is deployed and ready to run inference.
 
@@ -132,11 +152,11 @@ For more information and how to set specific service settings for the deployed m
 
 Once the model is deployed, you can test it by going to the Model Management, selecting the YOLOv8-segmentation model and then going to the test tab. Drag and drop or select an image to the image area:
 
-<img width="1218" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/194c0085-88a9-476a-90e4-efdf4e07070e">
+<img width="1450" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/ba0c34e5-6a3e-4474-ad98-06d28eb164c3">
 
 click the test button and wait for the prediction to be done:
 
-<img width="1218" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/074e0281-bd7a-4913-8e39-10b4d6998efc">
+<img width="1450" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/e000d206-7627-44b2-afa6-c46ab9551d7a">
 
 ## Prediction
 
@@ -144,7 +164,7 @@ click the test button and wait for the prediction to be done:
 
 The best way to perform predictions in the platform is to add a "Predict Node" to a pipeline:
 
-<img width="873" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/d52ac35b-4982-472d-8a82-1f5f01b1da89">
+<img width="912" alt="image" src="https://github.com/dataloop-ai-apps/yolov8-segmentation/assets/124260926/ae66f60c-5f3b-403e-a52b-540573a0aea9">
 
 Click [here](https://developers.dataloop.ai/onboarding/08_pipelines/) for more information on Dataloop Pipelines.
 
@@ -154,11 +174,7 @@ The deployed model can be used to run prediction on batches of images:
 
 ```python
 model_entity = dl.models.get(model_id='<model-id>')
-item_0 = dl.items.get(item_id='<item_0_id>')
-item_1 = dl.items.get(item_id='<item_1_id>')
-...
-item_n = dl.items.get(item_id='<item_n_id>')
-results = model_entity.predict_items([item_0, item_1, ..., item_n], upload_annotations=False)
+results = model_entity.predict_items([item_id_0, item_id_1, ..., item_id_n])
 print(results)
 ```
 
