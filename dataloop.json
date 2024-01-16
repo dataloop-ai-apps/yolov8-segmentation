@@ -1,0 +1,136 @@
+{
+  "name": "yolov8-segmentation",
+  "displayName": "YOLOv8 Segmentation",
+  "version": "v0.1.3",
+  "scope": "public",
+  "description": "YOLOv8 Segmentation Model Application",
+  "attributes": {
+    "Provider": "Dataloop",
+    "License": "AGPL-3.0",
+    "Category": "Model",
+    "Computer Vision": "Semantic Segmentation",
+    "Task Type": "Image"
+  },
+  "codebase": {
+    "type": "git",
+    "gitUrl": "https://github.com/dataloop-ai-apps/yolov8-segmentation.git",
+    "gitTag": "v0.1.3"
+  },
+  "components": {
+    "computeConfigs": [
+      {
+        "name": "yolov8-seg-deploy",
+        "runtime": {
+          "podType": "regular-xs",
+          "concurrency": 1,
+          "runnerImage": "ultralytics/ultralytics:8.0.183",
+          "autoscaler": {
+            "type": "rabbitmq",
+            "minReplicas": 0,
+            "maxReplicas": 2,
+            "queueLength": 100
+          },
+          "preemptible": false
+        }
+      },
+      {
+        "name": "yolov8-seg-train-evaluate",
+        "driverId": "",
+        "runtime": {
+          "podType": "gpu-t4",
+          "concurrency": 1,
+          "runnerImage": "ultralytics/ultralytics:8.0.183",
+          "autoscaler": {
+            "type": "rabbitmq",
+            "minReplicas": 0,
+            "maxReplicas": 2,
+            "queueLength": 100
+          },
+          "preemptible": false
+        }
+      }
+    ],
+    "modules": [
+      {
+        "name": "yolov8-seg-module",
+        "entryPoint": "model_adapter.py",
+        "className": "Adapter",
+        "computeConfig": "yolov8-seg-deploy",
+        "description": "YoloV8 Segmentation Module",
+        "initInputs": [
+          {
+            "type": "Model",
+            "name": "model_entity"
+          }
+        ],
+        "functions": [
+          {
+            "name": "evaluate_model",
+            "computeConfig": "yolov8-seg-train-evaluate",
+            "input": [
+              {
+                "type": "Model",
+                "name": "model",
+                "description": "Dataloop Model Entity"
+              }
+            ],
+            "output": [],
+            "displayName": "Evaluate a Model",
+            "displayIcon": "",
+            "description": "Function to evaluate YOLOv8 Segmentation model performance"
+          },
+          {
+            "name": "predict_items",
+            "input": [
+              {
+                "type": "Item[]",
+                "name": "items",
+                "description": "List of items to run inference on"
+              }
+            ],
+            "output": [],
+            "displayName": "Predict Items",
+            "displayIcon": "",
+            "description": "Function to run YOLOv8 Segmentation inference on items"
+          },
+          {
+            "name": "train_model",
+            "computeConfig": "yolov8-seg-train-evaluate",
+            "input": [
+              {
+                "type": "Model",
+                "name": "model",
+                "description": "Dataloop Model Entity"
+              }
+            ],
+            "output": [],
+            "displayName": "Train a Model",
+            "displayIcon": "",
+            "description": "Function to train YOLOv8 Segmentation model"
+          }
+        ]
+      }
+    ],
+    "models": [
+      {
+        "name": "yolov8-segmentation",
+        "moduleName": "yolov8-seg-module",
+        "scope": "project",
+        "status": "trained",
+        "configuration": {
+          "weights_filename": "yolov8l-seg.pt",
+          "epochs": 10,
+          "batch_size": 2,
+          "imgsz": 640,
+          "conf_thres": 0.25,
+          "iou_thres": 0.45,
+          "max_det": 1000,
+          "augment": false
+        },
+        "inputType": "image",
+        "outputType": "box",
+        "description": "Ultralytics YOLOv8 represents a modernized iteration, refining the successes of prior YOLO models. With added features and improvements, it aims to enhance both performance and versatility. YOLOv8 prioritizes speed, accuracy, and user-friendly design, making it a reliable option for tasks like object detection, tracking, instance segmentation, image classification, and pose estimation"
+      }
+    ]
+  }
+}
