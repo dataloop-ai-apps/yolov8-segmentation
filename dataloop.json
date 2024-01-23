@@ -5,7 +5,7 @@
   "scope": "public",
   "description": "YOLOv8 Segmentation Model Application",
   "attributes": {
-    "Provider": "Dataloop",
+    "Provider": "Ultralytics",
     "License": "AGPL-3.0",
     "Category": "Model",
     "Computer Vision": "Semantic Segmentation",
@@ -121,7 +121,7 @@
         "name": "yolov8-segmentation",
         "moduleName": "yolov8-seg-module",
         "scope": "project",
-        "status": "trained",
+        "status": "pretrained",
         "configuration": {
           "weights_filename": "yolov8l-seg.pt",
           "epochs": 10,
