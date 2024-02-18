@@ -42,7 +42,7 @@ class Adapter(dl.BaseModelAdapter):
 
         for subset, filters_dict in subsets.items():
             filters = dl.Filters(custom_filter=filters_dict)
-            filters.add_join(field='type', values=['segment', 'polygon'], operator=dl.FILTERS_OPERATIONS_IN)
+            filters.add_join(field='type', values=['binary', 'segment', 'polygon'], operator=dl.FILTERS_OPERATIONS_IN)
             filters.page_size = 0
             pages = self.model_entity.dataset.items.list(filters=filters)
             if pages.items_count == 0:
