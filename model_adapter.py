@@ -4,8 +4,12 @@ import logging
 import os
 import torch
 import PIL
+import base64
+import numpy as np
 
 from PIL import Image
+from skimage import measure
+from io import BytesIO
 from ultralytics import YOLO
 from ultralytics.yolo.utils import yaml_save
 
@@ -42,7 +46,7 @@ class Adapter(dl.BaseModelAdapter):
 
         for subset, filters_dict in subsets.items():
             filters = dl.Filters(custom_filter=filters_dict)
-            filters.add_join(field='type', values=['binary', 'segment', 'polygon'], operator=dl.FILTERS_OPERATIONS_IN)
+            filters.add_join(field='type', values=['segment', 'polygon'], operator=dl.FILTERS_OPERATIONS_IN)
             filters.page_size = 0
             pages = self.model_entity.dataset.items.list(filters=filters)
             if pages.items_count == 0:
@@ -72,19 +76,35 @@ class Adapter(dl.BaseModelAdapter):
                     annotations = list()
                     for ann in item_info.get("annotations", []):
                         valid = True
-                        annotation_line = [self.model_entity.label_to_id_map.get(ann.get("label"))]
-                        for coordinates in ann.get("coordinates", []):
-                            if isinstance(coordinates, list) and len(coordinates) > 0:
+                        annotation_lines = []
+                        coordinates = ann.get("coordinates")
+                        if isinstance(coordinates, list) and len(coordinates) > 0:
+                            annotation_lines.append([self.model_entity.label_to_id_map.get(ann.get("label"))])
+                            for coordinates in ann.get("coordinates", []):
                                 for coordinate in coordinates:
-                                    annotation_line.append(coordinate['x'] / item_width)
-                                    annotation_line.append(coordinate['y'] / item_height)
-                            else:
-                                logger.error(f"Coordinates of invalid type ({type(coordinates)}) "
-                                             f"or length ({len(coordinates) if isinstance(coordinates, list) else 'nan'}"
-                                             f")")
-                                valid = False
-                                break
-                        if valid is True:
+                                    annotation_lines[0].append(coordinate['x'] / item_width)
+                                    annotation_lines[0].append(coordinate['y'] / item_height)
+                        elif isinstance(coordinates, str):
+                            encoded_mask = coordinates.split(",")[1]
+                            decoded_mask = base64.b64decode(encoded_mask)
+                            image_mask = Image.open(BytesIO(decoded_mask))
+                            mask_array = np.array(image_mask)[:, :, 0]
+                            contours = measure.find_contours(mask_array, 128)
+                            for i, contour in enumerate(contours):
+                                annotation_lines.append([self.model_entity.label_to_id_map.get(ann.get("label"))])
+                                for obj in contour:
+                                    annotation_lines[i].append(obj[0] / item_width)
+                                    annotation_lines[i].append(obj[1] / item_height)
+                        else:
+                            logger.error(
+                                f"Coordinates of invalid type ({type(coordinates)}) "
+                                f"or length ({len(coordinates) if isinstance(coordinates, list) else 'nan'}"
+                                f")"
+                                )
+                            valid = False
+                            break
+                    if valid is True:
+                        for annotation_line in annotation_lines:
                             annotations.append(' '.join([str(el) for el in annotation_line]))
                 labels_file_path = os.path.join(labels_path, os.path.splitext(json_file_path)[0] + '.txt')
                 with open(labels_file_path, 'w') as labels_file:
