@@ -5,6 +5,7 @@ import os
 import torch
 import PIL
 import base64
+import concurrent.futures
 import numpy as np
 
 from PIL import Image
@@ -12,6 +13,7 @@ from skimage import measure
 from io import BytesIO
 from ultralytics import YOLO
 from ultralytics.yolo.utils import yaml_save
+from concurrent.futures import ProcessPoolExecutor
 
 logger = logging.getLogger('YOLOv8SegmentationAdapter')
 
@@ -26,6 +28,48 @@ class Adapter(dl.BaseModelAdapter):
     def save(self, local_path, **kwargs):
         self.model_entity.artifacts.upload(os.path.join(local_path, '*'))
         self.configuration.update({'weights_filename': 'weights/best.pt'})
+
+    def process_annotation_json_file(self, src_path: str, json_file_path: str, labels_path: str):
+        with open(os.path.join(src_path, json_file_path), 'r') as json_file:
+            item_info = json.load(json_file)
+            item_width = item_info.get('metadata', {}).get('system', {}).get('width', 0)
+            item_height = item_info.get('metadata', {}).get('system', {}).get('height', 0)
+            annotations = list()
+            for ann in item_info.get("annotations", []):
+                valid = True
+                annotation_lines = []
+                coordinates = ann.get("coordinates")
+                if isinstance(coordinates, list) and len(coordinates) > 0:
+                    annotation_lines.append([self.model_entity.label_to_id_map.get(ann.get("label"))])
+                    for coordinates in ann.get("coordinates", []):
+                        for coordinate in coordinates:
+                            annotation_lines[0].append(coordinate['x'] / item_width)
+                            annotation_lines[0].append(coordinate['y'] / item_height)
+                elif isinstance(coordinates, str):
+                    encoded_mask = coordinates.split(",")[1]
+                    decoded_mask = base64.b64decode(encoded_mask)
+                    image_mask = Image.open(BytesIO(decoded_mask))
+                    mask_array = np.array(image_mask)[:, :, 0]
+                    contours = measure.find_contours(mask_array, 128)
+                    for i, contour in enumerate(contours):
+                        annotation_lines.append([self.model_entity.label_to_id_map.get(ann.get("label"))])
+                        for obj in contour:
+                            annotation_lines[i].append(obj[0] / item_width)
+                            annotation_lines[i].append(obj[1] / item_height)
+                else:
+                    logger.error(
+                        f"Coordinates of invalid type ({type(coordinates)}) "
+                        f"or length ({len(coordinates) if isinstance(coordinates, list) else 'nan'}"
+                        f")"
+                        )
+                    valid = False
+                    break
+            if valid is True:
+                for annotation_line in annotation_lines:
+                    annotations.append(' '.join([str(el) for el in annotation_line]))
+        labels_file_path = os.path.join(labels_path, os.path.splitext(json_file_path)[0] + '.txt')
+        with open(labels_file_path, 'w') as labels_file:
+            labels_file.write('\n'.join(annotations))
 
     def convert_from_dtlpy(self, data_path, **kwargs):
         ##############
@@ -46,7 +90,9 @@ class Adapter(dl.BaseModelAdapter):
 
         for subset, filters_dict in subsets.items():
             filters = dl.Filters(custom_filter=filters_dict)
-            filters.add_join(field='type', values=['binary', 'segment', 'polygon'], operator=dl.FILTERS_OPERATIONS_IN)
+            filters.add_join('type',
+                             [dl.AnnotationType.POLYGON, dl.AnnotationType.SEGMENTATION],
+                             operator=dl.FILTERS_OPERATIONS_IN)
             filters.page_size = 0
             pages = self.model_entity.dataset.items.list(filters=filters)
             if pages.items_count == 0:
@@ -57,8 +103,10 @@ class Adapter(dl.BaseModelAdapter):
         #########
         # Paths #
         #########
-        train_dir = self.model_entity.metadata['system']['subsets']['train']['filter']['$and'][-1]['dir'][1:]
-        val_dir = self.model_entity.metadata['system']['subsets']['validation']['filter']['$and'][-1]['dir'][1:]
+        train_dir = [x["dir"] for x in self.model_entity.metadata['system']['subsets']['train']['filter']['$and']
+                     if x.get("dir") is not None][0][1:]
+        val_dir = [x["dir"] for x in self.model_entity.metadata['system']['subsets']['validation']['filter']['$and']
+                   if x.get("dir") is not None][0][1:]
         train_path = os.path.join(data_path, 'train', 'json', train_dir)
         validation_path = os.path.join(data_path, 'validation', 'json', val_dir)
 
@@ -68,47 +116,12 @@ class Adapter(dl.BaseModelAdapter):
         for src_path in [train_path, validation_path]:
             labels_path = os.path.join(data_path, 'train' if src_path == train_path else 'validation', 'json', 'labels')
             os.makedirs(labels_path, exist_ok=True)
-            for json_file_path in os.listdir(src_path):
-                with open(os.path.join(src_path, json_file_path), 'r') as json_file:
-                    item_info = json.load(json_file)
-                    item_width = item_info.get('metadata', {}).get('system', {}).get('width', 0)
-                    item_height = item_info.get('metadata', {}).get('system', {}).get('height', 0)
-                    annotations = list()
-                    for ann in item_info.get("annotations", []):
-                        valid = True
-                        annotation_lines = []
-                        coordinates = ann.get("coordinates")
-                        if isinstance(coordinates, list) and len(coordinates) > 0:
-                            annotation_lines.append([self.model_entity.label_to_id_map.get(ann.get("label"))])
-                            for coordinates in ann.get("coordinates", []):
-                                for coordinate in coordinates:
-                                    annotation_lines[0].append(coordinate['x'] / item_width)
-                                    annotation_lines[0].append(coordinate['y'] / item_height)
-                        elif isinstance(coordinates, str):
-                            encoded_mask = coordinates.split(",")[1]
-                            decoded_mask = base64.b64decode(encoded_mask)
-                            image_mask = Image.open(BytesIO(decoded_mask))
-                            mask_array = np.array(image_mask)[:, :, 0]
-                            contours = measure.find_contours(mask_array, 128)
-                            for i, contour in enumerate(contours):
-                                annotation_lines.append([self.model_entity.label_to_id_map.get(ann.get("label"))])
-                                for obj in contour:
-                                    annotation_lines[i].append(obj[0] / item_width)
-                                    annotation_lines[i].append(obj[1] / item_height)
-                        else:
-                            logger.error(
-                                f"Coordinates of invalid type ({type(coordinates)}) "
-                                f"or length ({len(coordinates) if isinstance(coordinates, list) else 'nan'}"
-                                f")"
-                                )
-                            valid = False
-                            break
-                    if valid is True:
-                        for annotation_line in annotation_lines:
-                            annotations.append(' '.join([str(el) for el in annotation_line]))
-                labels_file_path = os.path.join(labels_path, os.path.splitext(json_file_path)[0] + '.txt')
-                with open(labels_file_path, 'w') as labels_file:
-                    labels_file.write('\n'.join(annotations))
+            with ProcessPoolExecutor() as executor:
+                futures = [executor.submit(self.process_annotation_json_file, src_path, json_file_path, labels_path)
+                           for json_file_path in os.listdir(src_path)]
+                completed_futures, _ = concurrent.futures.wait(futures)
+
+
 
     def load(self, local_path, **kwargs):
         model_filename = self.configuration.get('weights_filename', 'yolov8l-seg.pt')
