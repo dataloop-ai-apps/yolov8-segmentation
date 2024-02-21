@@ -121,8 +121,6 @@ class Adapter(dl.BaseModelAdapter):
                            for json_file_path in os.listdir(src_path)]
                 completed_futures, _ = concurrent.futures.wait(futures)
 
-
-
     def load(self, local_path, **kwargs):
         model_filename = self.configuration.get('weights_filename', 'yolov8l-seg.pt')
         model_filepath = os.path.join(local_path, model_filename)
