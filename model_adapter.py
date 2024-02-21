@@ -68,8 +68,7 @@ class Adapter(dl.BaseModelAdapter):
                 for annotation_line in annotation_lines:
                     annotations.append(' '.join([str(el) for el in annotation_line]))
         labels_file_path = os.path.join(labels_path, os.path.splitext(json_file_path)[0] + '.txt')
-        with open(labels_file_path, 'w') as labels_file:
-            labels_file.write('\n'.join(annotations))
+        return labels_file_path, annotations
 
     def convert_from_dtlpy(self, data_path, **kwargs):
         ##############
@@ -120,6 +119,10 @@ class Adapter(dl.BaseModelAdapter):
                 futures = [executor.submit(self.process_annotation_json_file, src_path, json_file_path, labels_path)
                            for json_file_path in os.listdir(src_path)]
                 completed_futures, _ = concurrent.futures.wait(futures)
+            results = [future.result() for future in completed_futures]
+            for annotation_path, annotations in results:
+                with open(annotation_path, 'w') as annotation_file:
+                    annotation_file.write('\n'.join(annotations))
 
     def load(self, local_path, **kwargs):
         model_filename = self.configuration.get('weights_filename', 'yolov8l-seg.pt')
@@ -147,8 +150,10 @@ class Adapter(dl.BaseModelAdapter):
 
         project_name = os.path.dirname(output_path)
         name = os.path.basename(output_path)
-        train_dir = self.model_entity.metadata['system']['subsets']['train']['filter']['$and'][-1]['dir'][1:]
-        val_dir = self.model_entity.metadata['system']['subsets']['validation']['filter']['$and'][-1]['dir'][1:]
+        train_dir = [x["dir"] for x in self.model_entity.metadata['system']['subsets']['train']['filter']['$and']
+                     if x.get("dir") is not None][0][1:]
+        val_dir = [x["dir"] for x in self.model_entity.metadata['system']['subsets']['validation']['filter']['$and']
+                   if x.get("dir") is not None][0][1:]
 
 
         # https://github.com/ultralytics/yolov5/wiki/Train-Custom-Data#13-organize-directories
