@@ -125,7 +125,7 @@
       {
         "name": "yolov8-segmentation",
         "moduleName": "yolov8-seg-module",
-        "scope": "project",
+        "scope": "public",
         "status": "pre-trained",
         "configuration": {
           "weights_filename": "yolov8l-seg.pt",
