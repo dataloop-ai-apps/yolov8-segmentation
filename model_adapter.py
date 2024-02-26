@@ -13,7 +13,7 @@ from skimage import measure
 from io import BytesIO
 from ultralytics import YOLO
 from ultralytics.yolo.utils import yaml_save
-from concurrent.futures import ProcessPoolExecutor
+from concurrent.futures import ThreadPoolExecutor
 
 logger = logging.getLogger('YOLOv8SegmentationAdapter')
 
@@ -49,18 +49,18 @@ class Adapter(dl.BaseModelAdapter):
                     encoded_mask = coordinates.split(",")[1]
                     decoded_mask = base64.b64decode(encoded_mask)
                     image_mask = Image.open(BytesIO(decoded_mask))
-                    mask_array = np.array(image_mask)[:, :, 0]
-                    contours = measure.find_contours(mask_array, 128)
+                    mask_array = np.array(image_mask)
+                    mask = np.sum([mask_array[:, :, -x] for x in range(1, 4)], axis=0)
+                    contours = measure.find_contours(mask, 128)
                     for i, contour in enumerate(contours):
                         annotation_lines.append([self.model_entity.label_to_id_map.get(ann.get("label"))])
                         for obj in contour:
-                            annotation_lines[i].append(obj[0] / item_width)
-                            annotation_lines[i].append(obj[1] / item_height)
+                            annotation_lines[i].append(obj[0] / item_height)
+                            annotation_lines[i].append(obj[1] / item_width)
                 else:
                     logger.error(
                         f"Coordinates of invalid type ({type(coordinates)}) "
-                        f"or length ({len(coordinates) if isinstance(coordinates, list) else 'nan'}"
-                        f")"
+                        f"or length ({len(coordinates) if isinstance(coordinates, list) else 'nan'})"
                         )
                     valid = False
                     break
@@ -115,7 +115,7 @@ class Adapter(dl.BaseModelAdapter):
         for src_path in [train_path, validation_path]:
             labels_path = os.path.join(data_path, 'train' if src_path == train_path else 'validation', 'json', 'labels')
             os.makedirs(labels_path, exist_ok=True)
-            with ProcessPoolExecutor() as executor:
+            with ThreadPoolExecutor() as executor:
                 futures = [executor.submit(self.process_annotation_json_file, src_path, json_file_path, labels_path)
                            for json_file_path in os.listdir(src_path)]
                 completed_futures, _ = concurrent.futures.wait(futures)
