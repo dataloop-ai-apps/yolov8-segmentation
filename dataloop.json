@@ -104,6 +104,25 @@
             "description": "Function to run YOLOv8 Segmentation inference on items"
           },
           {
+            "name": "predict_dataset",
+            "input": [
+              {
+                "type": "Dataset",
+                "name": "dataset",
+                "description": ""
+              },
+              {
+                "type": "Json",
+                "name": "filters",
+                "description": "Dataloop Filter DQL"
+              }
+            ],
+            "output": [],
+            "displayName": "Predict Items",
+            "displayIcon": "",
+            "description": "Function to run YOLOv8-segmentation inference on a dataset."
+          },
+          {
             "name": "train_model",
             "computeConfig": "yolov8-seg-train-evaluate",
             "input": [
