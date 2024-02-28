@@ -140,7 +140,7 @@
               }
             ],
             "output": [],
-            "displayName": "Predict Items",
+            "displayName": "Predict Dataset",
             "displayIcon": "",
             "description": "Function to run YOLOv8-segmentation inference on a dataset."
           },
@@ -172,7 +172,7 @@
       {
         "name": "yolov8-segmentation",
         "moduleName": "yolov8-seg-module",
-        "scope": "public",
+        "scope": "project",
         "status": "pre-trained",
         "configuration": {
           "weights_filename": "yolov8l-seg.pt",
