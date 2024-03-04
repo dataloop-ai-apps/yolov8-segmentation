@@ -39,8 +39,8 @@ class Adapter(dl.BaseModelAdapter):
         item_files = glob(os.path.join(data_path, 'items', sub_path, '*'))
         for src, dst in zip([json_files, item_files], ['json', 'items']):
             for src_file in src:
-                if not os.path.exists(os.path.join(data_path, dst)):
-                    shutil.move(src_file, os.path.join(data_path, dst))
+                if not os.path.exists(os.path.join(data_path, dst, os.path.basename(src_file))):
+                    shutil.move(src_file, os.path.join(data_path, dst, os.path.basename(src_file)))
         for root, dirs, files in os.walk(data_path, topdown=False):
             for dir_name in dirs:
                 dir_path = os.path.join(root, dir_name)
