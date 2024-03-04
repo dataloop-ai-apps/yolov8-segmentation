@@ -48,7 +48,7 @@ class Adapter(dl.BaseModelAdapter):
                     os.rmdir(dir_path)
 
     def process_annotation_json_file(self, src_path: str, json_file_path: str, labels_path: str):
-        if os.path.isfile(json_file_path):
+        if os.path.isfile(os.path.join(src_path, json_file_path)):
             with open(os.path.join(src_path, json_file_path), 'r') as json_file:
                 item_info = json.load(json_file)
                 item_width = item_info.get('metadata', {}).get('system', {}).get('width', 0)
