@@ -34,11 +34,13 @@ class Adapter(dl.BaseModelAdapter):
     @staticmethod
     def move_annotation_files(data_path):
         json_files = glob(os.path.join(data_path, 'json', '**/*.json'))
+        json_files += glob(os.path.join(data_path, 'json', '*.json'))
         sub_path = '/'.join(json_files[0].split('json/')[-1].split('/')[:-1])
         item_files = glob(os.path.join(data_path, 'items', sub_path, '*'))
         for src, dst in zip([json_files, item_files], ['json', 'items']):
             for src_file in src:
-                shutil.move(src_file, os.path.join(data_path, dst))
+                if not os.path.exists(os.path.join(data_path, dst)):
+                    shutil.move(src_file, os.path.join(data_path, dst))
         for root, dirs, files in os.walk(data_path, topdown=False):
             for dir_name in dirs:
                 dir_path = os.path.join(root, dir_name)
@@ -148,10 +150,10 @@ class Adapter(dl.BaseModelAdapter):
         # first load official model -https://github.com/ultralytics/ultralytics/issues/3856
         _ = YOLO('yolov8l-seg.pt')
         if os.path.isfile(model_filepath):
-            model = YOLO(model_filepath) 
+            model = YOLO(model_filepath)
         else:
             logger.warning(f'Model path ({model_filepath}) not found! loading default model weights')
-            model = YOLO('yolov8l-seg.pt') 
+            model = YOLO('yolov8l-seg.pt')
         self.model = model
 
     def train(self, data_path, output_path, **kwargs):
