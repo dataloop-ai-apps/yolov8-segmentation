@@ -26,7 +26,7 @@
         "runtime": {
           "podType": "regular-xs",
           "concurrency": 1,
-          "runnerImage": "gcr.io/viewo-g/piper/agent/runner/gpu/ultralytics:8.0.183",
+          "runnerImage": "dataloop_runner-gpu/ultralytics:8.0.183",
           "autoscaler": {
             "type": "rabbitmq",
             "minReplicas": 0,
@@ -44,7 +44,7 @@
         "runtime": {
           "podType": "gpu-t4",
           "concurrency": 1,
-          "runnerImage": "gcr.io/viewo-g/piper/agent/runner/gpu/ultralytics:8.0.183",
+          "runnerImage": "dataloop_runner-gpu/ultralytics:8.0.183",
           "autoscaler": {
             "type": "rabbitmq",
             "minReplicas": 0,
