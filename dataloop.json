@@ -186,7 +186,7 @@
           "augment": false
         },
         "inputType": "image",
-        "outputType": "box",
+        "outputType": "segmentation",
         "supportedMethods": {
           "load": true,
           "predict": true,
