@@ -287,7 +287,31 @@ class Adapter(dl.BaseModelAdapter):
         return image
 
     def predict(self, batch, **kwargs):
-        results = self.model.predict(source=batch, save=False, save_txt=False)  # save predictions as labels
+        inference_args = self.configuration.get("inference_args", {})
+        inference_conf = inference_args.get("conf", 0.25)
+        inference_iou = inference_args.get("iou", 0.7)
+        inference_imgsz = inference_args.get("imgsz", 640)
+        inference_precision = inference_args.get("half", False)
+        inference_device = inference_args.get("device", "cpu")
+        inference_max_det = inference_args.get("max_det", 300)
+        inference_augment = inference_args.get("augment", False)
+        inference_agnostic_nms = inference_args.get("agnostic_nms", False)
+        inference_classes = inference_args.get("classes", None)
+        inference_retina_mask = inference_args.get("retina_mask", False)
+        results = self.model.predict(source=batch,
+                                     save=False,
+                                     save_txt=False,  # save predictions as labels
+                                     conf=inference_conf,
+                                     iou=inference_iou,
+                                     imgsz=inference_imgsz,
+                                     half=inference_precision,
+                                     device=inference_device,
+                                     mex_det=inference_max_det,
+                                     augment=inference_augment,
+                                     agnostic_nms=inference_agnostic_nms,
+                                     classes=inference_classes,
+                                     retina_mask=inference_retina_mask
+                                     )
         batch_annotations = list()
         for i_img, res in enumerate(results):  # per image
             if res.masks:
