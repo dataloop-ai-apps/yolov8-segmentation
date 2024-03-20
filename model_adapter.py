@@ -297,7 +297,7 @@ class Adapter(dl.BaseModelAdapter):
         inference_augment = inference_args.get("augment", False)
         inference_agnostic_nms = inference_args.get("agnostic_nms", False)
         inference_classes = inference_args.get("classes", None)
-        inference_retina_mask = inference_args.get("retina_mask", False)
+        inference_retina_masks = inference_args.get("retina_masks", False)
         results = self.model.predict(source=batch,
                                      save=False,
                                      save_txt=False,  # save predictions as labels
@@ -306,11 +306,11 @@ class Adapter(dl.BaseModelAdapter):
                                      imgsz=inference_imgsz,
                                      half=inference_precision,
                                      device=inference_device,
-                                     mex_det=inference_max_det,
+                                     max_det=inference_max_det,
                                      augment=inference_augment,
                                      agnostic_nms=inference_agnostic_nms,
                                      classes=inference_classes,
-                                     retina_mask=inference_retina_mask
+                                     retina_masks=inference_retina_mask
                                      )
         batch_annotations = list()
         for i_img, res in enumerate(results):  # per image
