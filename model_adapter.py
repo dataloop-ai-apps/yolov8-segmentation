@@ -310,7 +310,7 @@ class Adapter(dl.BaseModelAdapter):
                                      augment=inference_augment,
                                      agnostic_nms=inference_agnostic_nms,
                                      classes=inference_classes,
-                                     retina_masks=inference_retina_mask
+                                     retina_masks=inference_retina_masks
                                      )
         batch_annotations = list()
         for i_img, res in enumerate(results):  # per image
