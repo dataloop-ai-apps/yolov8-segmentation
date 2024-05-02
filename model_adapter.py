@@ -33,8 +33,11 @@ class Adapter(dl.BaseModelAdapter):
 
     @staticmethod
     def move_annotation_files(data_path):
-        json_files = glob(os.path.join(data_path, 'json', '**/*.json'))
+        logger.debug(f"Data path: {data_path}")
+        json_files = glob(os.path.join(data_path, 'json', '**/*.json'), recursive=True)
+        logger.debug(f"Glob json files: {json_files}")
         json_files += glob(os.path.join(data_path, 'json', '*.json'))
+        logger.debug(f"Json files: {json_files}")
         sub_path = '/'.join(json_files[0].split('json/')[-1].split('/')[:-1])
         item_files = glob(os.path.join(data_path, 'items', sub_path, '*'))
         for src, dst in zip([json_files, item_files], ['json', 'items']):
@@ -49,33 +52,48 @@ class Adapter(dl.BaseModelAdapter):
 
     def process_annotation_json_file(self, src_path: str, json_file_path: str, labels_path: str):
         if os.path.isfile(os.path.join(src_path, json_file_path)):
+            logger.info(f"Processing {os.path.join(src_path, json_file_path)}")
             with open(os.path.join(src_path, json_file_path), 'r') as json_file:
                 item_info = json.load(json_file)
                 item_width = item_info.get('metadata', {}).get('system', {}).get('width', 0)
                 item_height = item_info.get('metadata', {}).get('system', {}).get('height', 0)
+                logger.info(f"Item size for file at {os.path.join(src_path, json_file_path)}: {item_width} x {item_height}")
                 annotations = list()
-                for ann in item_info.get("annotations", []):
+                logger.info(f"Item at {os.path.join(src_path, json_file_path)} contains {len(item_info.get('annotations',[]))} annotations")
+                for n, ann in enumerate(item_info.get("annotations", [])):
                     valid = True
                     annotation_lines = []
                     coordinates = ann.get("coordinates")
                     if isinstance(coordinates, list) and len(coordinates) > 0:
+                        logger.debug(f"Annotation {n} of item @ {os.path.join(src_path, json_file_path)} has a list of coordinates")
                         annotation_lines.append([self.model_entity.label_to_id_map.get(ann.get("label"))])
+                        logger.debug(f"Annotation {n} of item @ {os.path.join(src_path, json_file_path)} is of label {annotation_lines}")
                         for coordinates in ann.get("coordinates", []):
                             for coordinate in coordinates:
-                                annotation_lines[0].append(coordinate['x'] / item_width)
-                                annotation_lines[0].append(coordinate['y'] / item_height)
+                                annotation_lines[-1].append(coordinate['x'] / item_width)
+                                annotation_lines[-1].append(coordinate['y'] / item_height)
+                        logger.debug(f"Coordinates and label of annotation {n} of item @ {os.path.join(src_path, json_file_path)}: {annotation_lines}")
+
                     elif isinstance(coordinates, str):
+                        logger.info(f"Annotation {n} of item @ {os.path.join(src_path, json_file_path)} is a string encoding a map")
                         encoded_mask = coordinates.split(",")[1]
                         decoded_mask = base64.b64decode(encoded_mask)
                         image_mask = Image.open(BytesIO(decoded_mask))
                         mask_array = np.array(image_mask)
+                        logger.info(f"Annotation {n} of item @ {os.path.join(src_path, json_file_path)} was successfully decoded as a map of dimension {mask_array.shape}")
                         mask = np.sum([mask_array[:, :, -x] for x in range(1, 4)], axis=0)
+                        logger.info(f"Annotation {n} of item @ {os.path.join(src_path, json_file_path)} converted to mask with 1 channel")
                         contours = measure.find_contours(mask, 128)
+                        logger.info(f"Annotation {n} of item @ {os.path.join(src_path, json_file_path)} obtained contours of {len(contours)} objects")
                         for i, contour in enumerate(contours):
+                            logger.debug(f"Processing contour {i} of annotation {n} of item @ {os.path.join(src_path, json_file_path)}")
                             annotation_lines.append([self.model_entity.label_to_id_map.get(ann.get("label"))])
+                            logger.debug(f"Contour {i} of annotation {n} of item @ {os.path.join(src_path, json_file_path)} is of label {annotation_lines[i]}")
                             for obj in contour:
                                 annotation_lines[i].append(obj[0] / item_height)
                                 annotation_lines[i].append(obj[1] / item_width)
+                            logger.debug(f"Contour {i} of annotation {n} of item @ {os.path.join(src_path, json_file_path)} generates annotation: {annotation_lines[i]}")
+                        logger.debug(f"Annotation {n} of item @ {os.path.join(src_path, json_file_path)} generated the following annotations: {annotation_lines}")
                     else:
                         logger.error(
                             f"Coordinates of invalid type ({type(coordinates)}) "
@@ -87,8 +105,10 @@ class Adapter(dl.BaseModelAdapter):
                     for annotation_line in annotation_lines:
                         annotations.append(' '.join([str(el) for el in annotation_line]))
             labels_file_path = os.path.join(labels_path, os.path.splitext(json_file_path)[0] + '.txt')
+            logger.info(f"Saved annotations of item @ {os.path.join(src_path, json_file_path)} in {labels_file_path}")
             return labels_file_path, annotations
         else:
+            logger.warn(f"Annotation json file {os.path.join(src_path, json_file_path)} was not found")
             return None, None
 
     def convert_from_dtlpy(self, data_path, **kwargs):
@@ -127,13 +147,16 @@ class Adapter(dl.BaseModelAdapter):
         self.move_annotation_files(os.path.join(data_path, 'validation'))
         train_path = os.path.join(data_path, 'train', 'json')
         validation_path = os.path.join(data_path, 'validation', 'json')
+        logger.info(f"Path for training: {train_path} -- path for validation: {validation_path}")
 
         ###########
         # Convert #
         ###########
+        logger.info("Converting dtlp annotations to YOLOv8 format")
         for src_path in [train_path, validation_path]:
             labels_path = os.path.join(data_path, 'train' if src_path == train_path else 'validation', 'json', 'labels')
             os.makedirs(labels_path, exist_ok=True)
+            logger.info(f"Creating label path: {labels_path}")
             with ThreadPoolExecutor() as executor:
                 futures = [executor.submit(self.process_annotation_json_file, src_path, json_file_path, labels_path)
                            for json_file_path in os.listdir(src_path)]
@@ -141,6 +164,7 @@ class Adapter(dl.BaseModelAdapter):
             results = [future.result() for future in completed_futures]
             for annotation_path, annotations in results:
                 if annotation_path is not None:
+                    logger.info(f"Saving annotations at: {annotation_path}")
                     with open(annotation_path, 'w') as annotation_file:
                         annotation_file.write('\n'.join(annotations))
 
@@ -207,7 +231,7 @@ class Adapter(dl.BaseModelAdapter):
                             dirs[i_dir] = 'imagesssss'
                 new_subfolder = os.path.join(data_path, *dirs)
                 if subfolder != new_subfolder:
-                    print(new_subfolder)
+                    logger.debug(new_subfolder)
                     os.rename(subfolder, new_subfolder)
 
         # check if validation exists
