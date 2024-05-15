@@ -57,48 +57,61 @@ class Adapter(dl.BaseModelAdapter):
                 item_info = json.load(json_file)
                 item_width = item_info.get('metadata', {}).get('system', {}).get('width', 0)
                 item_height = item_info.get('metadata', {}).get('system', {}).get('height', 0)
-                logger.info(f"Item size for file at {os.path.join(src_path, json_file_path)}: {item_width} x {item_height}")
+                logger.info(
+                    f"Item size for file at {os.path.join(src_path, json_file_path)}: {item_width} x {item_height}")
                 annotations = list()
-                logger.info(f"Item at {os.path.join(src_path, json_file_path)} contains {len(item_info.get('annotations',[]))} annotations")
+                logger.info(
+                    f"Item at {os.path.join(src_path, json_file_path)} contains {len(item_info.get('annotations', []))} annotations")
                 for n, ann in enumerate(item_info.get("annotations", [])):
                     valid = True
                     annotation_lines = []
                     coordinates = ann.get("coordinates")
                     if isinstance(coordinates, list) and len(coordinates) > 0:
-                        logger.debug(f"Annotation {n} of item @ {os.path.join(src_path, json_file_path)} has a list of coordinates")
+                        logger.debug(
+                            f"Annotation {n} of item @ {os.path.join(src_path, json_file_path)} has a list of coordinates")
                         annotation_lines.append([self.model_entity.label_to_id_map.get(ann.get("label"))])
-                        logger.debug(f"Annotation {n} of item @ {os.path.join(src_path, json_file_path)} is of label {annotation_lines}")
+                        logger.debug(
+                            f"Annotation {n} of item @ {os.path.join(src_path, json_file_path)} is of label {annotation_lines}")
                         for coordinates in ann.get("coordinates", []):
                             for coordinate in coordinates:
                                 annotation_lines[-1].append(coordinate['x'] / item_width)
                                 annotation_lines[-1].append(coordinate['y'] / item_height)
-                        logger.debug(f"Coordinates and label of annotation {n} of item @ {os.path.join(src_path, json_file_path)}: {annotation_lines}")
+                        logger.debug(
+                            f"Coordinates and label of annotation {n} of item @ {os.path.join(src_path, json_file_path)}: {annotation_lines}")
 
                     elif isinstance(coordinates, str):
-                        logger.info(f"Annotation {n} of item @ {os.path.join(src_path, json_file_path)} is a string encoding a map")
+                        logger.info(
+                            f"Annotation {n} of item @ {os.path.join(src_path, json_file_path)} is a string encoding a map")
                         encoded_mask = coordinates.split(",")[1]
                         decoded_mask = base64.b64decode(encoded_mask)
                         image_mask = Image.open(BytesIO(decoded_mask))
                         mask_array = np.array(image_mask)
-                        logger.info(f"Annotation {n} of item @ {os.path.join(src_path, json_file_path)} was successfully decoded as a map of dimension {mask_array.shape}")
+                        logger.info(
+                            f"Annotation {n} of item @ {os.path.join(src_path, json_file_path)} was successfully decoded as a map of dimension {mask_array.shape}")
                         mask = np.sum([mask_array[:, :, -x] for x in range(1, 4)], axis=0)
-                        logger.info(f"Annotation {n} of item @ {os.path.join(src_path, json_file_path)} converted to mask with 1 channel")
+                        logger.info(
+                            f"Annotation {n} of item @ {os.path.join(src_path, json_file_path)} converted to mask with 1 channel")
                         contours = measure.find_contours(mask, 128)
-                        logger.info(f"Annotation {n} of item @ {os.path.join(src_path, json_file_path)} obtained contours of {len(contours)} objects")
+                        logger.info(
+                            f"Annotation {n} of item @ {os.path.join(src_path, json_file_path)} obtained contours of {len(contours)} objects")
                         for i, contour in enumerate(contours):
-                            logger.debug(f"Processing contour {i} of annotation {n} of item @ {os.path.join(src_path, json_file_path)}")
+                            logger.debug(
+                                f"Processing contour {i} of annotation {n} of item @ {os.path.join(src_path, json_file_path)}")
                             annotation_lines.append([self.model_entity.label_to_id_map.get(ann.get("label"))])
-                            logger.debug(f"Contour {i} of annotation {n} of item @ {os.path.join(src_path, json_file_path)} is of label {annotation_lines[i]}")
+                            logger.debug(
+                                f"Contour {i} of annotation {n} of item @ {os.path.join(src_path, json_file_path)} is of label {annotation_lines[i]}")
                             for obj in contour:
                                 annotation_lines[i].append(obj[0] / item_height)
                                 annotation_lines[i].append(obj[1] / item_width)
-                            logger.debug(f"Contour {i} of annotation {n} of item @ {os.path.join(src_path, json_file_path)} generates annotation: {annotation_lines[i]}")
-                        logger.debug(f"Annotation {n} of item @ {os.path.join(src_path, json_file_path)} generated the following annotations: {annotation_lines}")
+                            logger.debug(
+                                f"Contour {i} of annotation {n} of item @ {os.path.join(src_path, json_file_path)} generates annotation: {annotation_lines[i]}")
+                        logger.debug(
+                            f"Annotation {n} of item @ {os.path.join(src_path, json_file_path)} generated the following annotations: {annotation_lines}")
                     else:
                         logger.error(
                             f"Coordinates of invalid type ({type(coordinates)}) "
                             f"or length ({len(coordinates) if isinstance(coordinates, list) else 'nan'})"
-                            )
+                        )
                         valid = False
                         break
                 if valid is True:
@@ -121,12 +134,12 @@ class Adapter(dl.BaseModelAdapter):
             raise ValueError(
                 'Couldnt find train set. Yolov8 requires train and validation set for training. '
                 'Add a train set DQL filter in the dl.Model metadata'
-                )
+            )
         if 'validation' not in subsets:
             raise ValueError(
                 'Couldnt find validation set. Yolov8 requires train and validation set for training. '
                 'Add a validation set DQL filter in the dl.Model metadata'
-                )
+            )
 
         for subset, filters_dict in subsets.items():
             filters = dl.Filters(custom_filter=filters_dict)
@@ -195,7 +208,6 @@ class Adapter(dl.BaseModelAdapter):
         project_name = os.path.dirname(output_path)
         name = os.path.basename(output_path)
 
-
         # https://github.com/ultralytics/yolov5/wiki/Train-Custom-Data#13-organize-directories
         src_images_path_train = os.path.join(data_path, 'train', 'items')
         dst_images_path_train = os.path.join(data_path, 'train', 'images')
@@ -239,11 +251,11 @@ class Adapter(dl.BaseModelAdapter):
             raise ValueError(
                 'Couldnt find validation set. Yolov8 requires train and validation set for training. '
                 'Add a validation set DQL filter in the dl.Model metadata'
-                )
+            )
         if len(self.model_entity.labels) == 0:
             raise ValueError(
                 'model.labels is empty. Model entity must have labels'
-                )
+            )
 
         logger.debug(f"Train dir: {os.listdir(os.path.join(data_path, 'train'))}")
         logger.debug(f"Train dir: {os.listdir(os.path.join(data_path, 'train', 'images'))}")
@@ -312,16 +324,18 @@ class Adapter(dl.BaseModelAdapter):
 
     def predict(self, batch, **kwargs):
         inference_args = self.configuration.get("inference_args", {})
-        inference_conf = inference_args.get("conf", 0.25)
+        inference_conf = inference_args.get("conf", 0.05)
         inference_iou = inference_args.get("iou", 0.7)
         inference_imgsz = inference_args.get("imgsz", 640)
         inference_precision = inference_args.get("half", False)
-        inference_device = inference_args.get("device", "cpu")
+        inference_device = inference_args.get("device", None)
         inference_max_det = inference_args.get("max_det", 300)
         inference_augment = inference_args.get("augment", False)
         inference_agnostic_nms = inference_args.get("agnostic_nms", False)
         inference_classes = inference_args.get("classes", None)
         inference_retina_masks = inference_args.get("retina_masks", False)
+        if inference_device is None:
+            inference_device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
         results = self.model.predict(source=batch,
                                      save=False,
                                      save_txt=False,  # save predictions as labels
@@ -338,8 +352,9 @@ class Adapter(dl.BaseModelAdapter):
                                      )
         batch_annotations = list()
         for i_img, res in enumerate(results):  # per image
+            image_annotations = dl.AnnotationCollection()
             if res.masks:
-                image_annotations = dl.AnnotationCollection()
+
                 for box, mask in zip(reversed(res.boxes), reversed(res.masks)):
                     cls, conf = box.cls.squeeze(), box.conf.squeeze()
                     c = int(cls)
@@ -350,5 +365,5 @@ class Adapter(dl.BaseModelAdapter):
                                           model_info={'name': self.model_entity.name,
                                                       'model_id': self.model_entity.id,
                                                       'confidence': float(conf)})
-                batch_annotations.append(image_annotations)
+            batch_annotations.append(image_annotations)
         return batch_annotations
