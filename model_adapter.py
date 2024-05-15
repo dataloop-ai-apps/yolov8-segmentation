@@ -62,9 +62,9 @@ class Adapter(dl.BaseModelAdapter):
                 annotations = list()
                 logger.info(
                     f"Item at {os.path.join(src_path, json_file_path)} contains {len(item_info.get('annotations', []))} annotations")
+                annotation_lines = []
                 for n, ann in enumerate(item_info.get("annotations", [])):
                     valid = True
-                    annotation_lines = []
                     coordinates = ann.get("coordinates")
                     if isinstance(coordinates, list) and len(coordinates) > 0:
                         logger.debug(
