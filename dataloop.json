@@ -187,12 +187,6 @@
         },
         "inputType": "image",
         "outputType": "segment",
-        "supportedMethods": {
-          "load": true,
-          "predict": true,
-          "train": true,
-          "evaluate": true
-        },
         "description": "Ultralytics YOLOv8 represents a modernized iteration, refining the successes of prior YOLO models. With added features and improvements, it aims to enhance both performance and versatility. YOLOv8 prioritizes speed, accuracy, and user-friendly design, making it a reliable option for tasks like object detection, tracking, instance segmentation, image classification, and pose estimation",
         "labels": [
           "person",
