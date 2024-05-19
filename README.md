@@ -84,6 +84,17 @@ The basic configurations included are:
 * ```labels```: The labels over which the model will train and predict (defaults to the labels in the model's dataset's recipe)
 * ```id_to_label_map```: Dictionary mapping numbers to labels to guide the model outputs
 * ```label_to_id_map```: Inverse map from ```id_to_label_map```
+* ```inference_args```: Dictionary containing inference-specific arguments, such as:
+  * ```conf```: the confidence threshold, below which predictions will be discarded. Default: 0.2
+  * ```iou```: the iou threshold, below which inferences will be discarded. Default: 0.7
+  * ```imgsz```: image size to which input images will be converted during inference (size will be ```imgsz x imgsz```). Default: 640
+  * ```half```: set to ```true``` to use half-precision during inference. Default: false
+  * ```device```: Device in which to run inference. Default: cpu
+  * ```max_det```: Maximum number of detections per image. Default: 300
+  * ```augment```: Whether to use augmentation on inference or not. Default: false
+  * ```agnostic_nms```: Whether to use agnostic non-maximum suppression during inference. Default: false
+  * ```classes```: Restrict inference just to the set of classes described here, separated by commas. Default: null
+  * ```retina_masks```: Use high quality retina masks if available. Default: false
 
 Additional configurations shown in the [Ultralytics documentation](https://docs.ultralytics.com/usage/cfg/#train) can be included in a dictionary under the key ```yaml_config```.
 
