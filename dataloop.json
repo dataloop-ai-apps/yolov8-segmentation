@@ -183,7 +183,10 @@
           "conf_thres": 0.25,
           "iou_thres": 0.45,
           "max_det": 1000,
-          "augment": false
+          "augment": false,
+          "inference_args": {
+            "conf": 0.25
+          }
         },
         "inputType": "image",
         "outputType": "segment",
