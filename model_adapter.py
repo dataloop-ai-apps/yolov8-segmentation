@@ -9,7 +9,7 @@ import shutil
 import concurrent.futures
 import numpy as np
 
-from glob import glob
+from pathlib import Path
 from PIL import Image
 from skimage import measure
 from io import BytesIO
@@ -34,15 +34,13 @@ class Adapter(dl.BaseModelAdapter):
     @staticmethod
     def move_annotation_files(data_path):
         logger.debug(f"Data path: {data_path}")
-        json_files = glob(os.path.join(data_path, 'json', '**/*.json'), recursive=True)
-        logger.debug(f"Glob json files: {json_files}")
-        json_files += glob(os.path.join(data_path, 'json', '*.json'))
+        path = Path(data_path)
+        json_files = (path/'json').rglob("*.json")
         logger.debug(f"Json files: {json_files}")
         img_extensions = ["jpg", "jpeg", "png", "bmp"]
         item_files = []
         for ext in img_extensions:
-            item_files += glob(os.path.join(data_path, "items", f"**/*.{ext}"), recursive=True)
-            item_files += glob(os.path.join(data_path, "items", f"*.{ext}"), recursive=True)
+            item_files += (path/'items').rglob(f"*.{ext}")
         for src, dst in zip([json_files, item_files], ['json', 'items']):
             for src_file in src:
                 if not os.path.exists(os.path.join(data_path, dst, os.path.basename(src_file))):
