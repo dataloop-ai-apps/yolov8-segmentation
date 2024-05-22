@@ -67,14 +67,17 @@ class Adapter(dl.BaseModelAdapter):
                 annotation_lines = []
                 for n, ann in enumerate(item_info.get("annotations", [])):
                     valid = True
+                    if ann["type"] not in [dl.AnnotationType.SEGMENTATION, dl.AnnotationType.POLYGON]:
+                        logger.debug(f"Annotation {n} of item @ {os.path.join(src_path, json_file_path)} was ignored "
+                                     f"because it's of type {ann['type']}")
+                        continue
                     coordinates = ann.get("coordinates")
                     if isinstance(coordinates, list) and len(coordinates) > 0:
                         logger.debug(
                             f"Annotation {n} of item @ {os.path.join(src_path, json_file_path)} has a list of "
                             f"coordinates")
                         annotation_lines.append([self.model_entity.label_to_id_map.get(ann.get("label"))])
-                        if len(coordinates) == 1 and isinstance(coordinates[0], list):
-                            coordinates = coordinates[0]
+                        coordinates = coordinates[0]
                         for coordinate in coordinates:
                             annotation_lines[-1].append(coordinate['x'] / item_width)
                             annotation_lines[-1].append(coordinate['y'] / item_height)
