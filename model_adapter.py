@@ -9,7 +9,7 @@ import shutil
 import concurrent.futures
 import numpy as np
 
-from glob import glob
+from pathlib import Path
 from PIL import Image
 from skimage import measure
 from io import BytesIO
@@ -34,12 +34,13 @@ class Adapter(dl.BaseModelAdapter):
     @staticmethod
     def move_annotation_files(data_path):
         logger.debug(f"Data path: {data_path}")
-        json_files = glob(os.path.join(data_path, 'json', '**/*.json'), recursive=True)
-        logger.debug(f"Glob json files: {json_files}")
-        json_files += glob(os.path.join(data_path, 'json', '*.json'))
+        path = Path(data_path)
+        json_files = (path/'json').rglob("*.json")
         logger.debug(f"Json files: {json_files}")
-        sub_path = '/'.join(json_files[0].split('json/')[-1].split('/')[:-1])
-        item_files = glob(os.path.join(data_path, 'items', sub_path, '*'))
+        img_extensions = ["jpg", "jpeg", "png", "bmp"]
+        item_files = []
+        for ext in img_extensions:
+            item_files += (path/'items').rglob(f"*.{ext}")
         for src, dst in zip([json_files, item_files], ['json', 'items']):
             for src_file in src:
                 if not os.path.exists(os.path.join(data_path, dst, os.path.basename(src_file))):
@@ -61,52 +62,58 @@ class Adapter(dl.BaseModelAdapter):
                     f"Item size for file at {os.path.join(src_path, json_file_path)}: {item_width} x {item_height}")
                 annotations = list()
                 logger.info(
-                    f"Item at {os.path.join(src_path, json_file_path)} contains {len(item_info.get('annotations', []))} annotations")
+                    f"Item at {os.path.join(src_path, json_file_path)} contains {len(item_info.get('annotations', []))} "
+                    f"annotations")
                 annotation_lines = []
                 for n, ann in enumerate(item_info.get("annotations", [])):
                     valid = True
+                    if ann["type"] not in [dl.AnnotationType.SEGMENTATION, dl.AnnotationType.POLYGON]:
+                        logger.debug(f"Annotation {n} of item @ {os.path.join(src_path, json_file_path)} was ignored "
+                                     f"because it's of type {ann['type']}")
+                        continue
                     coordinates = ann.get("coordinates")
                     if isinstance(coordinates, list) and len(coordinates) > 0:
                         logger.debug(
-                            f"Annotation {n} of item @ {os.path.join(src_path, json_file_path)} has a list of coordinates")
+                            f"Annotation {n} of item @ {os.path.join(src_path, json_file_path)} has a list of "
+                            f"coordinates")
                         annotation_lines.append([self.model_entity.label_to_id_map.get(ann.get("label"))])
-                        logger.debug(
-                            f"Annotation {n} of item @ {os.path.join(src_path, json_file_path)} is of label {annotation_lines}")
-                        for coordinates in ann.get("coordinates", []):
-                            for coordinate in coordinates:
-                                annotation_lines[-1].append(coordinate['x'] / item_width)
-                                annotation_lines[-1].append(coordinate['y'] / item_height)
-                        logger.debug(
-                            f"Coordinates and label of annotation {n} of item @ {os.path.join(src_path, json_file_path)}: {annotation_lines}")
+                        coordinates = coordinates[0]
+                        for coordinate in coordinates:
+                            annotation_lines[-1].append(coordinate['x'] / item_width)
+                            annotation_lines[-1].append(coordinate['y'] / item_height)
 
                     elif isinstance(coordinates, str):
                         logger.info(
-                            f"Annotation {n} of item @ {os.path.join(src_path, json_file_path)} is a string encoding a map")
+                            f"Annotation {n} of item @ {os.path.join(src_path, json_file_path)} is a string encoding a "
+                            f"map")
                         encoded_mask = coordinates.split(",")[1]
                         decoded_mask = base64.b64decode(encoded_mask)
                         image_mask = Image.open(BytesIO(decoded_mask))
                         mask_array = np.array(image_mask)
                         logger.info(
-                            f"Annotation {n} of item @ {os.path.join(src_path, json_file_path)} was successfully decoded as a map of dimension {mask_array.shape}")
+                            f"Annotation {n} of item @ {os.path.join(src_path, json_file_path)} was successfully decoded"
+                            f" as a map of dimension {mask_array.shape}")
                         mask = np.sum([mask_array[:, :, -x] for x in range(1, 4)], axis=0)
                         logger.info(
-                            f"Annotation {n} of item @ {os.path.join(src_path, json_file_path)} converted to mask with 1 channel")
+                            f"Annotation {n} of item @ {os.path.join(src_path, json_file_path)} converted to mask with "
+                            f"1 channel")
                         contours = measure.find_contours(mask, 128)
                         logger.info(
-                            f"Annotation {n} of item @ {os.path.join(src_path, json_file_path)} obtained contours of {len(contours)} objects")
+                            f"Annotation {n} of item @ {os.path.join(src_path, json_file_path)} obtained contours of "
+                            f"{len(contours)} objects")
                         for i, contour in enumerate(contours):
                             logger.debug(
-                                f"Processing contour {i} of annotation {n} of item @ {os.path.join(src_path, json_file_path)}")
+                                f"Processing contour {i} of annotation {n} of item @ "
+                                f"{os.path.join(src_path, json_file_path)}")
                             annotation_lines.append([self.model_entity.label_to_id_map.get(ann.get("label"))])
-                            logger.debug(
-                                f"Contour {i} of annotation {n} of item @ {os.path.join(src_path, json_file_path)} is of label {annotation_lines[i]}")
                             for obj in contour:
                                 annotation_lines[i].append(obj[0] / item_height)
                                 annotation_lines[i].append(obj[1] / item_width)
                             logger.debug(
-                                f"Contour {i} of annotation {n} of item @ {os.path.join(src_path, json_file_path)} generates annotation: {annotation_lines[i]}")
+                                f"Contour {i} of annotation {n} of item @ {os.path.join(src_path, json_file_path)} "
+                                f"generated.")
                         logger.debug(
-                            f"Annotation {n} of item @ {os.path.join(src_path, json_file_path)} generated the following annotations: {annotation_lines}")
+                            f"Annotation {n} of item @ {os.path.join(src_path, json_file_path)} generated.")
                     else:
                         logger.error(
                             f"Coordinates of invalid type ({type(coordinates)}) "
