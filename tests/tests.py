@@ -7,6 +7,9 @@ import torch
 import numpy as np
 import enum
 
+os.environ['BOT_EMAIL'] = "bot.d4c2dc5e-3e60-4e41-8479-528542531376@bot.dataloop.ai"
+os.environ['BOT_PWD'] = "1e*8#C76GX&0p8O8v"
+os.environ['PROJECT_ID'] = "e0b61a98-928b-4412-b30b-d0a96bb67790"
 
 SEED = 1337
 BOT_EMAIL = os.environ['BOT_EMAIL']
@@ -68,21 +71,18 @@ class MyTestCase(unittest.TestCase):
         dl.logout()
 
     # Item preparation functions
-    def _prepare_image_item(self, model_item_name: str):
-        item_name = f'{ItemTypes.IMAGE.value}.jpeg'
+    def _prepare_image_item(self, item_name: str):
         local_path = os.path.join(self.tests_path, item_name)
-        remote_name = f'{model_item_name}.jpeg'
         item = self.dataset.items.upload(
             local_path=local_path,
-            remote_name=remote_name,
             overwrite=True
         )
         return item
 
     # Perdict function
-    def _perform_model_predict(self, item_type: ItemTypes, model_item_name: str, api_key_function=None):
+    def _perform_model_predict(self, item_type: ItemTypes, item_name: str):
         # Upload item
-        item = self.prepare_item_function[item_type.value](self=self, model_item_name=model_item_name)
+        item = self.prepare_item_function[item_type.value](self=self, item_name=item_name)
 
         # Open dataloop json
         dataloop_json_filepath = os.path.join(self.root_path, 'dataloop.json')
@@ -113,10 +113,12 @@ class MyTestCase(unittest.TestCase):
 
     # Test functions
     def test_yolov8_segmentation(self):
-        model_item_name = "yolov8-segmentation"
+        item_name = "car_image.jpeg"
         item_type = ItemTypes.IMAGE
-        predicted_annotations = self._perform_model_predict(item_type=item_type, model_item_name=model_item_name)
+        predicted_annotations = self._perform_model_predict(item_type=item_type, item_name=item_name)
         self.assertTrue(isinstance(predicted_annotations, list) and len(predicted_annotations) > 0)
+        car_annotation = self.dataset.annotations.get(annotation_id=predicted_annotations[0]["annotation_id"])
+        self.assertTrue(car_annotation.type == dl.AnnotationType.POLYGON and car_annotation.label == "car")
 
 
 if __name__ == '__main__':
