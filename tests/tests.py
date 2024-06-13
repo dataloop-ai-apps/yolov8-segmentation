@@ -7,9 +7,6 @@ import torch
 import numpy as np
 import enum
 
-os.environ['BOT_EMAIL'] = "bot.d4c2dc5e-3e60-4e41-8479-528542531376@bot.dataloop.ai"
-os.environ['BOT_PWD'] = "1e*8#C76GX&0p8O8v"
-os.environ['PROJECT_ID'] = "e0b61a98-928b-4412-b30b-d0a96bb67790"
 
 SEED = 1337
 BOT_EMAIL = os.environ['BOT_EMAIL']
