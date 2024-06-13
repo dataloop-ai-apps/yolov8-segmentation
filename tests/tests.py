@@ -15,7 +15,7 @@ SEED = 1337
 BOT_EMAIL = os.environ['BOT_EMAIL']
 BOT_PWD = os.environ['BOT_PWD']
 PROJECT_ID = os.environ['PROJECT_ID']
-DATASET_NAME = "YoloV8-Tests"
+DATASET_NAME = "YoloV8-Segmentation-Tests"
 
 
 class ItemTypes(enum.Enum):
