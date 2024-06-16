@@ -19,7 +19,7 @@ class MyTestCase(unittest.TestCase):
     project: dl.Project = None
     dataset: dl.Dataset = None
     root_path: str = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    tests_path: str = os.path.join(root_path, 'tests', 'example_data')
+    tests_data_path: str = os.path.join(root_path, 'tests', 'example_data')
     prepare_item_function = dict()
 
     @classmethod
@@ -58,7 +58,7 @@ class MyTestCase(unittest.TestCase):
 
     # Item preparation functions
     def _prepare_image_item(self, item_name: str):
-        local_path = os.path.join(self.tests_path, item_name)
+        local_path = os.path.join(self.tests_data_path, item_name)
         item = self.dataset.items.upload(
             local_path=local_path,
             overwrite=True
