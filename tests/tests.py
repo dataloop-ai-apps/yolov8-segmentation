@@ -79,15 +79,18 @@ class MyTestCase(unittest.TestCase):
         dataloop_json["name"] = f'{dataloop_json["name"]}-{self.project.id}'
         model_name = dataloop_json.get('components', dict()).get('models', list())[0].get("name", None)
 
-        # Publish dpk and install app
-        dpk = dl.Dpk.from_json(_json=dataloop_json, client_api=dl.client_api, project=self.project)
-        dpk = self.project.dpks.publish(dpk=dpk)
-        app = self.project.apps.install(dpk=dpk)
+        try:
+            model = self.project.models.get(model_name=model_name)
+        except:
+            # Publish dpk and install app
+            dpk = dl.Dpk.from_json(_json=dataloop_json, client_api=dl.client_api, project=self.project)
+            dpk = self.project.dpks.publish(dpk=dpk)
+            app = self.project.apps.install(dpk=dpk)
 
-        # Get model and predict
-        model = app.project.models.get(model_name=model_name)
+            # Get model and predict
+            model = app.project.models.get(model_name=model_name)
+
         service = model.deploy()
-
         model.metadata["system"]["deploy"] = {"services": [service.id]}
         execution = model.predict(item_ids=[item.id])
         execution = execution.wait()
