@@ -2,13 +2,9 @@ import unittest
 import dtlpy as dl
 import os
 import json
-import random
-import torch
-import numpy as np
 import enum
 
 
-SEED = 1337
 BOT_EMAIL = os.environ['BOT_EMAIL']
 BOT_PWD = os.environ['BOT_PWD']
 PROJECT_ID = os.environ['PROJECT_ID']
@@ -40,13 +36,6 @@ class MyTestCase(unittest.TestCase):
         cls.prepare_item_function = {
             ItemTypes.IMAGE.value: cls._prepare_image_item
         }
-
-    def setUp(self) -> None:
-        random.seed(SEED)
-        np.random.seed(SEED)
-        torch.manual_seed(SEED)
-        if torch.cuda.is_available():
-            torch.cuda.manual_seed_all(SEED)
 
     @classmethod
     def tearDownClass(cls) -> None:
