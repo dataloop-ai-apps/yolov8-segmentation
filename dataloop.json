@@ -77,6 +77,11 @@
                 "type": "Dataset",
                 "name": "dataset",
                 "description": "Dataloop Dataset Entity"
+              },
+              {
+                "type": "Json",
+                "name": "filters",
+                "description": "Filter to select items over which to run evaluation"
               }
             ],
             "output": [
@@ -137,7 +142,7 @@
             "output": [],
             "displayName": "Predict Dataset",
             "displayIcon": "",
-            "description": "Function to run YOLOv8-segmentation inference on a dataset."
+            "description": "Function to run YOLOv8 Segmentation inference on a dataset."
           },
           {
             "name": "train_model",
