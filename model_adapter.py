@@ -22,6 +22,9 @@ logger = logging.getLogger('YOLOv8SegmentationAdapter')
 # set max image size
 PIL.Image.MAX_IMAGE_PIXELS = 933120000
 
+DEFAULT_WEIGHTS = ['yolov8l-seg.pt', 'yolov8m-seg.pt', 'yolov8s-seg.pt', 'yolov8n-seg.pt', 'yolov8x-seg.pt']
+
+
 
 @dl.Package.decorators.module(description='Model Adapter for Yolov8 object segmentation',
                               name='model-adapter',
@@ -190,14 +193,14 @@ class Adapter(dl.BaseModelAdapter):
 
     def load(self, local_path, **kwargs):
         model_filename = self.configuration.get('weights_filename', 'yolov8l-seg.pt')
-        model_filepath = os.path.join(local_path, model_filename)
+        model_filepath = os.path.join(local_path, model_filename) if model_filename not in DEFAULT_WEIGHTS \
+            else model_filename
         # first load official model -https://github.com/ultralytics/ultralytics/issues/3856
         _ = YOLO('yolov8l-seg.pt')
-        if os.path.isfile(model_filepath):
-            model = YOLO(model_filepath)
+        if model_filename in DEFAULT_WEIGHTS or os.path.isfile(model_filepath):
+            model = YOLO(model_filepath)  # pass any model type
         else:
-            logger.warning(f'Model path ({model_filepath}) not found! loading default model weights')
-            model = YOLO('yolov8l-seg.pt')
+            raise dl.exceptions.NotFound(f'Model path ({model_filepath}) not found!')
         self.model = model
 
     def train(self, data_path, output_path, **kwargs):
