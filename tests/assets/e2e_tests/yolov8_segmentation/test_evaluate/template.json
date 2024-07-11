@@ -1,0 +1,207 @@
+{
+  "projectId": null,
+  "orgId": null,
+  "connections": [
+    {
+      "src": {
+        "nodeId": "1797387a-d0b4-4a91-8fdb-65f6312da02d",
+        "portId": "a9b1cd3e-8ac3-4bc6-b1b5-07b0f467e290"
+      },
+      "tgt": {
+        "nodeId": "924dab37-2269-4c86-b75c-573a28ab6cba",
+        "portId": "059e7407-1906-4ed1-824d-44405c4f2d1e"
+      },
+      "condition": "{}"
+    },
+    {
+      "src": {
+        "nodeId": "1797387a-d0b4-4a91-8fdb-65f6312da02d",
+        "portId": "abe8f139-7c85-48c7-b166-9b09dbdfc4b6"
+      },
+      "tgt": {
+        "nodeId": "924dab37-2269-4c86-b75c-573a28ab6cba",
+        "portId": "7e35eac3-38c7-49fe-a335-9b74c8e7bcea"
+      },
+      "condition": "{}"
+    },
+    {
+      "src": {
+        "nodeId": "1797387a-d0b4-4a91-8fdb-65f6312da02d",
+        "portId": "4695eecc-72cb-40ff-ae76-9ec5e9f59f70"
+      },
+      "tgt": {
+        "nodeId": "924dab37-2269-4c86-b75c-573a28ab6cba",
+        "portId": "559ad0c2-2236-4236-b241-bde0a9353434"
+      },
+      "condition": "{}"
+    }
+  ],
+  "startNodes": [
+    {
+      "nodeId": "1797387a-d0b4-4a91-8fdb-65f6312da02d",
+      "type": "root",
+      "id": "2afb2334-2aab-44a7-8a21-7d1256b4aa31"
+    }
+  ],
+  "variables": [
+    {
+      "name": "model",
+      "type": "Model",
+      "description": null
+    },
+    {
+      "name": "dataset",
+      "type": "Dataset",
+      "description": null
+    }
+  ],
+  "description": "",
+  "name": "YOLOv8Seg-Eval",
+  "templateKind": "org",
+  "nodes": [
+    {
+      "id": "924dab37-2269-4c86-b75c-573a28ab6cba",
+      "inputs": [
+        {
+          "portId": "059e7407-1906-4ed1-824d-44405c4f2d1e",
+          "nodeId": "059e7407-1906-4ed1-824d-44405c4f2d1e",
+          "type": "Model",
+          "name": "model",
+          "displayName": "model",
+          "io": "input"
+        },
+        {
+          "portId": "7e35eac3-38c7-49fe-a335-9b74c8e7bcea",
+          "nodeId": "7e35eac3-38c7-49fe-a335-9b74c8e7bcea",
+          "type": "Dataset",
+          "name": "dataset",
+          "displayName": "dataset",
+          "io": "input"
+        },
+        {
+          "portId": "559ad0c2-2236-4236-b241-bde0a9353434",
+          "nodeId": "559ad0c2-2236-4236-b241-bde0a9353434",
+          "type": "Json",
+          "name": "filters",
+          "displayName": "filters",
+          "io": "input"
+        }
+      ],
+      "outputs": [
+        {
+          "portId": "ceb74a7e-83cc-41d7-aa44-85dc501661c0",
+          "nodeId": "ceb74a7e-83cc-41d7-aa44-85dc501661c0",
+          "type": "Model",
+          "name": "model",
+          "displayName": "model",
+          "io": "output"
+        },
+        {
+          "portId": "a563e8c4-f40f-40ac-8e0b-c6695ca7cc7b",
+          "nodeId": "a563e8c4-f40f-40ac-8e0b-c6695ca7cc7b",
+          "type": "Dataset",
+          "name": "dataset",
+          "displayName": "dataset",
+          "io": "output"
+        }
+      ],
+      "name": "YOLOv8 Evaluate",
+      "type": "ml",
+      "namespace": {
+        "functionName": "evaluate",
+        "projectName": null,
+        "serviceName": "model-mgmt-app-evaluate",
+        "moduleName": "yolov8-seg-module",
+        "packageName": "model-mgmt-app"
+      },
+      "projectId": null,
+      "metadata": {
+        "position": {
+          "x": 10000.0,
+          "y": 10000.0,
+          "z": 0
+        },
+        "repeatable": true
+      }
+    },
+    {
+      "id": "1797387a-d0b4-4a91-8fdb-65f6312da02d",
+      "inputs": [
+        {
+          "portId": "c5d02259-5706-4947-a6e1-007a346c1462",
+          "nodeId": "c5d02259-5706-4947-a6e1-007a346c1462",
+          "type": "Model",
+          "name": "model",
+          "displayName": "model",
+          "variableName": "model",
+          "io": "input"
+        },
+        {
+          "portId": "1e28dad0-908b-404c-aef9-d96132fe3284",
+          "nodeId": "1e28dad0-908b-404c-aef9-d96132fe3284",
+          "type": "Dataset",
+          "name": "dataset",
+          "displayName": "dataset",
+          "variableName": "dataset",
+          "io": "input"
+        }
+      ],
+      "outputs": [
+        {
+          "portId": "a9b1cd3e-8ac3-4bc6-b1b5-07b0f467e290",
+          "nodeId": "a9b1cd3e-8ac3-4bc6-b1b5-07b0f467e290",
+          "type": "Model",
+          "name": "model",
+          "displayName": "model",
+          "io": "output"
+        },
+        {
+          "portId": "abe8f139-7c85-48c7-b166-9b09dbdfc4b6",
+          "nodeId": "abe8f139-7c85-48c7-b166-9b09dbdfc4b6",
+          "type": "Dataset",
+          "name": "dataset",
+          "displayName": "dataset",
+          "io": "output"
+        },
+        {
+          "portId": "4695eecc-72cb-40ff-ae76-9ec5e9f59f70",
+          "nodeId": "4695eecc-72cb-40ff-ae76-9ec5e9f59f70",
+          "type": "Json",
+          "name": "filters",
+          "displayName": "filters",
+          "io": "output"
+        }
+      ],
+      "name": "preprocess",
+      "type": "code",
+      "namespace": {
+        "functionName": "run",
+        "projectName": null,
+        "serviceName": "",
+        "moduleName": null,
+        "packageName": ""
+      },
+      "projectId": null,
+      "config": {
+        "package": {
+          "code": "import dtlpy as dl\n\nclass ServiceRunner:\n    @staticmethod\n    def run(model: dl.Model, dataset: dl.Dataset):\n        filters = dl.Filters()\n        filters.add(field='metadata.system.tags.test', values=True)\n        filters = filters.prepare()\n        return model, dataset, filters\n",
+          "name": "run",
+          "type": "code",
+          "codebase": {
+            "type": "item"
+          }
+        }
+      },
+      "metadata": {
+        "position": {
+          "x": 9500.0,
+          "y": 10000.0,
+          "z": 0
+        },
+        "repeatable": true
+      }
+    }
+  ],
+  "preview": "668fc19d4857f344df361bed",
+  "_id": "668fc7234857f3a4723621b4"
+}

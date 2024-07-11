@@ -1,0 +1,25 @@
+# ordered list of dpks to publish and install
+dpks:
+    - yolov8-segmentation:
+        install_app: True
+
+# ordered list of datasets to create from local assets
+local_datasets:
+    - dataset
+
+# ordered list of models to get from apps
+models:
+    - yolov8-segmentation:
+        deploy_model: False
+        source_app: yolov8-segmentation
+
+# list of pipeline variables to update with reference
+variables:
+    dataset:
+        dataset:
+            resource_type: datasets
+            entity_field: id
+    model:
+        yolov8:
+            resource_type: models
+            entity_field: id
