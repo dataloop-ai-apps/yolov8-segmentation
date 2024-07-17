@@ -27,7 +27,7 @@ class TestUtils:
         # Paths
         self.root_path = root_path
         self.test_path = test_path
-        self.datasets_path = os.path.join(self.root_path, 'tests', 'assets', 'datasets', 'e2e_tests')
+        self.datasets_path = os.path.join(self.root_path, 'tests', 'assets', 'e2e_tests', 'datasets')
         self._setup()
 
     def _setup(self):
@@ -114,9 +114,15 @@ class TestUtils:
                     if key not in ["system"]:
                         item_metadata.update({key: value})
 
+                # Construct item remote path
+                item_path = pathlib.Path(item_binary)
+                item_relative_path = item_path.relative_to(items_folder_path)
+                remote_path = "/".join(item_relative_path.parts[:-1])
+
                 # Upload item
                 dataset.items.upload(
                     local_path=str(item_binary),
+                    remote_path=remote_path,
                     local_annotations_path=str(annotation_json),
                     item_metadata=item_metadata
                 )
@@ -131,7 +137,7 @@ class TestUtils:
         dpk_json_filepath = None
         for manifest in self.dataloop_cfg.get("manifests", list()):
             dpk_json_filepath = manifest
-            with open(dpk_json_filepath, 'r') as f:
+            with open(dpk_json_filepath, 'r', encoding="utf8") as f:
                 dpk_json = json.load(f)
             if dpk_json["name"] == dpk_name:
                 break
@@ -212,7 +218,7 @@ class TestUtils:
         )
 
         # Get service
-        services = self.project.models.list(filters=filters)
+        services = self.project.services.list(filters=filters)
         if isinstance(services, dl.entities.PagedEntities):
             services = list(services.all())
         return services
