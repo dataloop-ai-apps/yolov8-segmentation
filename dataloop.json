@@ -6,6 +6,7 @@
   "description": "YOLOv8 Segmentation Model Application",
   "attributes": {
     "Provider": "Ultralytics",
+    "Deployed By": "Dataloop",
     "License": "AGPL-3.0",
     "Category": "Model",
     "Computer Vision": "Semantic Segmentation",
