@@ -1,0 +1,330 @@
+{
+  "projectId": null,
+  "orgId": null,
+  "connections": [
+    {
+      "src": {
+        "nodeId": "bca873eb-97a3-4e1b-b7fe-085db0cd8308",
+        "portId": "dd0b54a1-cb45-4c4d-a838-2d9f1bc7bcd8"
+      },
+      "tgt": {
+        "nodeId": "ac32de9c-5834-4d26-b75e-a200bf00bb64",
+        "portId": "d569abd2-017e-4e65-abd8-2437c3c81035"
+      },
+      "condition": "{}"
+    },
+    {
+      "src": {
+        "nodeId": "ac32de9c-5834-4d26-b75e-a200bf00bb64",
+        "portId": "4ad9d819-c8a9-420e-bee8-9aea42687ea4"
+      },
+      "tgt": {
+        "nodeId": "62615f67-4ddc-4827-a6a2-d98de483192d",
+        "portId": "6b1bf32d-c6cc-4ae5-aa16-e5bdc9c5a42b"
+      },
+      "condition": "{}"
+    },
+    {
+      "src": {
+        "nodeId": "62615f67-4ddc-4827-a6a2-d98de483192d",
+        "portId": "bfbf69bf-718e-4b96-9dc6-1e4e2cb5c878"
+      },
+      "tgt": {
+        "nodeId": "60507f0d-3d10-410c-ac82-f99191c079a6",
+        "portId": "70ffda12-1548-47ca-b474-8668f249eff0"
+      },
+      "condition": "{}"
+    },
+    {
+      "src": {
+        "nodeId": "62615f67-4ddc-4827-a6a2-d98de483192d",
+        "portId": "e1ef6cda-8888-4754-873c-b7ed815b493f"
+      },
+      "tgt": {
+        "nodeId": "60507f0d-3d10-410c-ac82-f99191c079a6",
+        "portId": "793b4b0c-a8a2-45fd-a837-d620d8baf55a"
+      },
+      "condition": "{}"
+    },
+    {
+      "src": {
+        "nodeId": "62615f67-4ddc-4827-a6a2-d98de483192d",
+        "portId": "4a3d7798-1940-45f7-b552-9140e115ad5b"
+      },
+      "tgt": {
+        "nodeId": "60507f0d-3d10-410c-ac82-f99191c079a6",
+        "portId": "edf9b3b5-55e6-40e0-b8bb-17bd4e1fa83e"
+      },
+      "condition": "{}"
+    }
+  ],
+  "startNodes": [
+    {
+      "nodeId": "bca873eb-97a3-4e1b-b7fe-085db0cd8308",
+      "type": "root",
+      "id": "412ff70a-a213-42f5-80c0-8ae6a8c69523"
+    }
+  ],
+  "variables": [
+    {
+      "name": "dataset",
+      "type": "Dataset",
+      "description": null
+    },
+    {
+      "name": "model",
+      "type": "Model",
+      "description": null
+    }
+  ],
+  "description": "",
+  "name": "YOLOv8Seg-TnE",
+  "templateKind": "org",
+  "nodes": [
+    {
+      "id": "bca873eb-97a3-4e1b-b7fe-085db0cd8308",
+      "inputs": [
+        {
+          "portId": "560de366-f917-4023-a036-e0c98f3af6d3",
+          "nodeId": "560de366-f917-4023-a036-e0c98f3af6d3",
+          "type": "Dataset",
+          "name": "dataset",
+          "displayName": "dataset",
+          "variableName": "dataset",
+          "io": "input"
+        },
+        {
+          "portId": "f69fbc09-5d92-4305-8c62-e2939dc777c9",
+          "nodeId": "f69fbc09-5d92-4305-8c62-e2939dc777c9",
+          "type": "Model",
+          "name": "model",
+          "displayName": "model",
+          "variableName": "model",
+          "io": "input"
+        }
+      ],
+      "outputs": [
+        {
+          "portId": "dd0b54a1-cb45-4c4d-a838-2d9f1bc7bcd8",
+          "nodeId": "dd0b54a1-cb45-4c4d-a838-2d9f1bc7bcd8",
+          "type": "Model",
+          "name": "model",
+          "displayName": "model",
+          "io": "output"
+        }
+      ],
+      "name": "preprocess-train",
+      "type": "code",
+      "namespace": {
+        "functionName": "run",
+        "projectName": null,
+        "serviceName": "",
+        "moduleName": null,
+        "packageName": ""
+      },
+      "projectId": null,
+      "config": {
+        "package": {
+          "code": "import dtlpy as dl\n\nclass ServiceRunner:\n\n    @staticmethod\n    def run(dataset: dl.Dataset, model: dl.Model):\n        # Get filters\n        train_filters = dl.Filters()\n        train_filters.add(field=\"metadata.system.tags.train\", values=True)\n        validation_filters = dl.Filters()\n        validation_filters.add(field=\"metadata.system.tags.validation\", values=True)\n\n        # Update model metadata\n        model.dataset_id = dataset.id\n        model.add_subset(subset_name=\"train\", subset_filter=train_filters)\n        model.add_subset(subset_name=\"validation\", subset_filter=validation_filters)\n        model.update(system_metadata=True)\n\n        return model\n",
+          "name": "run",
+          "type": "code",
+          "codebase": {
+            "type": "item"
+          }
+        }
+      },
+      "metadata": {
+        "position": {
+          "x": 9764.231246948242,
+          "y": 10007.399993896484,
+          "z": 0
+        },
+        "repeatable": true
+      }
+    },
+    {
+      "id": "ac32de9c-5834-4d26-b75e-a200bf00bb64",
+      "inputs": [
+        {
+          "portId": "d569abd2-017e-4e65-abd8-2437c3c81035",
+          "nodeId": "d569abd2-017e-4e65-abd8-2437c3c81035",
+          "type": "Model",
+          "name": "model",
+          "displayName": "model",
+          "io": "input"
+        }
+      ],
+      "outputs": [
+        {
+          "portId": "4ad9d819-c8a9-420e-bee8-9aea42687ea4",
+          "nodeId": "4ad9d819-c8a9-420e-bee8-9aea42687ea4",
+          "type": "Model",
+          "name": "model",
+          "displayName": "model",
+          "io": "output"
+        }
+      ],
+      "name": "Train Model",
+      "type": "ml",
+      "namespace": {
+        "functionName": "train",
+        "projectName": null,
+        "serviceName": "model-mgmt-app-train",
+        "moduleName": "model-mgmt-app-train",
+        "packageName": "model-mgmt-app"
+      },
+      "projectId": null,
+      "metadata": {
+        "position": {
+          "x": 10056.231246948242,
+          "y": 10007.399993896484,
+          "z": 0
+        },
+        "repeatable": true
+      }
+    },
+    {
+      "id": "60507f0d-3d10-410c-ac82-f99191c079a6",
+      "inputs": [
+        {
+          "portId": "70ffda12-1548-47ca-b474-8668f249eff0",
+          "nodeId": "70ffda12-1548-47ca-b474-8668f249eff0",
+          "type": "Model",
+          "name": "model",
+          "displayName": "model",
+          "io": "input"
+        },
+        {
+          "portId": "793b4b0c-a8a2-45fd-a837-d620d8baf55a",
+          "nodeId": "793b4b0c-a8a2-45fd-a837-d620d8baf55a",
+          "type": "Dataset",
+          "name": "dataset",
+          "displayName": "dataset",
+          "io": "input"
+        },
+        {
+          "portId": "edf9b3b5-55e6-40e0-b8bb-17bd4e1fa83e",
+          "nodeId": "edf9b3b5-55e6-40e0-b8bb-17bd4e1fa83e",
+          "type": "Json",
+          "name": "filters",
+          "displayName": "filters",
+          "io": "input"
+        }
+      ],
+      "outputs": [
+        {
+          "portId": "e3eac710-0cb5-404c-b6b4-f1cedecc7c25",
+          "nodeId": "e3eac710-0cb5-404c-b6b4-f1cedecc7c25",
+          "type": "Model",
+          "name": "model",
+          "displayName": "model",
+          "io": "output"
+        },
+        {
+          "portId": "32e6411c-e176-471b-a7e5-70ee99945ff3",
+          "nodeId": "32e6411c-e176-471b-a7e5-70ee99945ff3",
+          "type": "Dataset",
+          "name": "dataset",
+          "displayName": "dataset",
+          "io": "output"
+        }
+      ],
+      "name": "Evaluate Model",
+      "type": "ml",
+      "namespace": {
+        "functionName": "evaluate",
+        "projectName": null,
+        "serviceName": "model-mgmt-app-evaluate",
+        "moduleName": "model-mgmt-app-evaluate",
+        "packageName": "model-mgmt-app"
+      },
+      "projectId": null,
+      "metadata": {
+        "position": {
+          "x": 10652.652145385742,
+          "y": 10007.846282958984,
+          "z": 0
+        },
+        "repeatable": true
+      }
+    },
+    {
+      "id": "62615f67-4ddc-4827-a6a2-d98de483192d",
+      "inputs": [
+        {
+          "portId": "6b1bf32d-c6cc-4ae5-aa16-e5bdc9c5a42b",
+          "nodeId": "6b1bf32d-c6cc-4ae5-aa16-e5bdc9c5a42b",
+          "type": "Model",
+          "name": "model",
+          "displayName": "model",
+          "io": "input"
+        },
+        {
+          "portId": "90c6c7c5-a34d-43bf-896e-cef9340106d1",
+          "nodeId": "90c6c7c5-a34d-43bf-896e-cef9340106d1",
+          "type": "Dataset",
+          "name": "dataset",
+          "displayName": "dataset",
+          "variableName": "dataset",
+          "io": "input"
+        }
+      ],
+      "outputs": [
+        {
+          "portId": "bfbf69bf-718e-4b96-9dc6-1e4e2cb5c878",
+          "nodeId": "bfbf69bf-718e-4b96-9dc6-1e4e2cb5c878",
+          "type": "Model",
+          "name": "model",
+          "displayName": "model",
+          "io": "output"
+        },
+        {
+          "portId": "e1ef6cda-8888-4754-873c-b7ed815b493f",
+          "nodeId": "e1ef6cda-8888-4754-873c-b7ed815b493f",
+          "type": "Dataset",
+          "name": "dataset",
+          "displayName": "dataset",
+          "io": "output"
+        },
+        {
+          "portId": "4a3d7798-1940-45f7-b552-9140e115ad5b",
+          "nodeId": "4a3d7798-1940-45f7-b552-9140e115ad5b",
+          "type": "Json",
+          "name": "filters",
+          "displayName": "filters",
+          "io": "output"
+        }
+      ],
+      "name": "preprocess-evaluate",
+      "type": "code",
+      "namespace": {
+        "functionName": "run",
+        "projectName": null,
+        "serviceName": "",
+        "moduleName": null,
+        "packageName": ""
+      },
+      "projectId": null,
+      "config": {
+        "package": {
+          "code": "import dtlpy as dl\n\nclass ServiceRunner:\n    @staticmethod\n    def run(model: dl.Model, dataset: dl.Dataset):\n        filters = dl.Filters()\n        filters.add(field='metadata.system.tags.test', values=True)\n        filters = filters.prepare()\n        return model, dataset, filters\n",
+          "name": "run",
+          "type": "code",
+          "codebase": {
+            "type": "item"
+          }
+        }
+      },
+      "metadata": {
+        "position": {
+          "x": 10354.231246948242,
+          "y": 10001.399993896484,
+          "z": 0
+        },
+        "repeatable": true
+      }
+    }
+  ],
+  "preview": "668ff3582e4faf9123713c49",
+  "_id": "668ff3812e4faf038b713c6e"
+}

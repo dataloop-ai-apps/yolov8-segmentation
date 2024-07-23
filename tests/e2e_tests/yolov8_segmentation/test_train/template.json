@@ -1,0 +1,145 @@
+{
+  "projectId": null,
+  "orgId": null,
+  "connections": [
+    {
+      "src": {
+        "nodeId": "4e9a6f7e-49d4-4002-ab09-cead90f7bd5c",
+        "portId": "ab7dc654-a3be-4577-86c6-38ae54cd9fed"
+      },
+      "tgt": {
+        "nodeId": "3b1e7c38-97e8-4b60-8df2-8bc76c062dbb",
+        "portId": "50df9552-a793-45e7-9410-534135e97dd7"
+      },
+      "condition": "{}"
+    }
+  ],
+  "startNodes": [
+    {
+      "nodeId": "4e9a6f7e-49d4-4002-ab09-cead90f7bd5c",
+      "type": "root",
+      "id": "34cc2c98-83df-4fe4-9aa8-b738dd22eeef"
+    }
+  ],
+  "variables": [
+    {
+      "name": "dataset",
+      "type": "Dataset",
+      "description": null
+    },
+    {
+      "name": "model",
+      "type": "Model",
+      "description": null
+    }
+  ],
+  "description": "",
+  "name": "YOLOv8Seg-Train",
+  "templateKind": "org",
+  "nodes": [
+    {
+      "id": "3b1e7c38-97e8-4b60-8df2-8bc76c062dbb",
+      "inputs": [
+        {
+          "portId": "50df9552-a793-45e7-9410-534135e97dd7",
+          "nodeId": "50df9552-a793-45e7-9410-534135e97dd7",
+          "type": "Model",
+          "name": "model",
+          "displayName": "model",
+          "io": "input"
+        }
+      ],
+      "outputs": [
+        {
+          "portId": "a598243d-7697-44ed-b2ea-c153a9528cb9",
+          "nodeId": "a598243d-7697-44ed-b2ea-c153a9528cb9",
+          "type": "Model",
+          "name": "model",
+          "displayName": "model",
+          "io": "output"
+        }
+      ],
+      "name": "YOLOv8 Train",
+      "type": "ml",
+      "namespace": {
+        "functionName": "train",
+        "projectName": null,
+        "serviceName": "model-mgmt-app-train",
+        "moduleName": "yolov8-seg-module",
+        "packageName": "model-mgmt-app"
+      },
+      "projectId": null,
+      "metadata": {
+        "position": {
+          "x": 10000.0,
+          "y": 10000.0,
+          "z": 0
+        },
+        "repeatable": true
+      }
+    },
+    {
+      "id": "4e9a6f7e-49d4-4002-ab09-cead90f7bd5c",
+      "inputs": [
+        {
+          "portId": "d85786b2-dcf6-4a6f-922e-bf6e4b2dadee",
+          "nodeId": "d85786b2-dcf6-4a6f-922e-bf6e4b2dadee",
+          "type": "Dataset",
+          "name": "dataset",
+          "displayName": "dataset",
+          "variableName": "dataset",
+          "io": "input"
+        },
+        {
+          "portId": "c3a1215d-184f-4661-9519-61a948dad4d1",
+          "nodeId": "c3a1215d-184f-4661-9519-61a948dad4d1",
+          "type": "Model",
+          "name": "model",
+          "displayName": "model",
+          "variableName": "model",
+          "io": "input"
+        }
+      ],
+      "outputs": [
+        {
+          "portId": "ab7dc654-a3be-4577-86c6-38ae54cd9fed",
+          "nodeId": "ab7dc654-a3be-4577-86c6-38ae54cd9fed",
+          "type": "Model",
+          "name": "model",
+          "displayName": "model",
+          "io": "output"
+        }
+      ],
+      "name": "preprocess",
+      "type": "code",
+      "namespace": {
+        "functionName": "run",
+        "projectName": null,
+        "serviceName": "",
+        "moduleName": null,
+        "packageName": ""
+      },
+      "projectId": null,
+      "config": {
+        "package": {
+          "code": "import dtlpy as dl\n\nclass ServiceRunner:\n\n    @staticmethod\n    def run(dataset: dl.Dataset, model: dl.Model):\n        # Get filters\n        train_filters = dl.Filters()\n        train_filters.add(field=\"metadata.system.tags.train\", values=True)\n        validation_filters = dl.Filters()\n        validation_filters.add(field=\"metadata.system.tags.validation\", values=True)\n\n        # Update model metadata\n        model.dataset_id = dataset.id\n        model.add_subset(subset_name=\"train\", subset_filter=train_filters)\n        model.add_subset(subset_name=\"validation\", subset_filter=validation_filters)\n        model.update(system_metadata=True)\n\n        return model\n",
+          "name": "run",
+          "type": "code",
+          "codebase": {
+            "type": "item"
+          }
+        }
+      },
+      "metadata": {
+        "position": {
+          "x": 9500.0,
+          "y": 10000.0,
+          "z": 0
+        },
+        "repeatable": true
+      }
+    }
+  ],
+  "preview": "668fc170a1487f65d808c93c",
+  "_id": "668fc6872e4faf1215710cee"
+}
