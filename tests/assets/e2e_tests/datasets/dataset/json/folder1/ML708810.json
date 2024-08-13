@@ -1,0 +1,221 @@
+{
+  "id": "66bb0f59d07c64287b65918f",
+  "datasetId": "66bb0f5823de7288c537ce4c",
+  "url": "https://rc-gate.dataloop.ai/api/v1/items/66bb0f59d07c64287b65918f",
+  "dataset": "https://rc-gate.dataloop.ai/api/v1/datasets/66bb0f5823de7288c537ce4c",
+  "createdAt": "2024-08-13T07:46:33.513Z",
+  "dir": "/folder1",
+  "filename": "/folder1/ML708810.jpg",
+  "type": "file",
+  "hidden": false,
+  "metadata": {
+    "system": {
+      "channels": 3,
+      "encoding": "7bit",
+      "height": 1200,
+      "isBinary": true,
+      "mimetype": "image/jpeg",
+      "originalname": "ML708810.jpg",
+      "refs": [],
+      "size": 242455,
+      "tags": {
+        "validation": true
+      },
+      "taskStatusLog": [],
+      "thumbnailId": "66bb0f6ea3700cff9d1a26dd",
+      "width": 940
+    }
+  },
+  "name": "ML708810.jpg",
+  "creator": "bot.d4c2dc5e-3e60-4e41-8479-528542531376@bot.dataloop.ai",
+  "updatedAt": "2024-08-13T07:46:54.475Z",
+  "updatedBy": "ofir.g@dataloop.ai",
+  "stream": "https://rc-gate.dataloop.ai/api/v1/items/66bb0f59d07c64287b65918f/stream",
+  "thumbnail": "https://rc-gate.dataloop.ai/api/v1/items/66bb0f59d07c64287b65918f/thumbnail",
+  "annotations": [
+    {
+      "id": "66bb0f590482e626ad147912",
+      "datasetId": "66bb0f5823de7288c537ce4c",
+      "itemId": "66bb0f59d07c64287b65918f",
+      "url": "https://rc-gate.dataloop.ai/api/v1/annotations/66bb0f590482e626ad147912",
+      "item": "https://rc-gate.dataloop.ai/api/v1/items/66bb0f59d07c64287b65918f",
+      "dataset": "https://rc-gate.dataloop.ai/api/v1/datasets/66bb0f5823de7288c537ce4c",
+      "type": "segment",
+      "label": "bird",
+      "attributes": [],
+      "coordinates": [
+        [
+          {
+            "x": 663.3333333333333,
+            "y": 644.9999999999999
+          },
+          {
+            "x": 538.3333333333333,
+            "y": 621.6666666666666
+          },
+          {
+            "x": 498.3333333333333,
+            "y": 593.3333333333333
+          },
+          {
+            "x": 329.99999999999994,
+            "y": 635
+          },
+          {
+            "x": 315,
+            "y": 664.9999999999999
+          },
+          {
+            "x": 406.66666666666663,
+            "y": 658.3333333333333
+          },
+          {
+            "x": 351.66666666666663,
+            "y": 708.3333333333333
+          },
+          {
+            "x": 349.99999999999994,
+            "y": 708.3333333333333
+          },
+          {
+            "x": 286.66666666666663,
+            "y": 774.9999999999999
+          },
+          {
+            "x": 285,
+            "y": 851.6666666666666
+          },
+          {
+            "x": 199.99999999999997,
+            "y": 951.6666666666666
+          },
+          {
+            "x": 208.33333333333331,
+            "y": 971.6666666666666
+          },
+          {
+            "x": 84.99999999999999,
+            "y": 1048.3333333333333
+          },
+          {
+            "x": 116.66666666666666,
+            "y": 1073.3333333333333
+          },
+          {
+            "x": 116.66666666666666,
+            "y": 1071.6666666666665
+          },
+          {
+            "x": 209.99999999999997,
+            "y": 1013.3333333333333
+          },
+          {
+            "x": 209.99999999999997,
+            "y": 1011.6666666666666
+          },
+          {
+            "x": 261.66666666666663,
+            "y": 1026.6666666666665
+          },
+          {
+            "x": 303.3333333333333,
+            "y": 996.6666666666666
+          },
+          {
+            "x": 351.66666666666663,
+            "y": 1003.3333333333333
+          },
+          {
+            "x": 488.3333333333333,
+            "y": 953.3333333333333
+          },
+          {
+            "x": 561.6666666666666,
+            "y": 856.6666666666666
+          },
+          {
+            "x": 548.3333333333333,
+            "y": 763.3333333333333
+          },
+          {
+            "x": 525,
+            "y": 651.6666666666666
+          }
+        ]
+      ],
+      "metadata": {
+        "system": {
+          "attributes": {},
+          "automated": false,
+          "clientId": "f36b83b3-c89e-4979-815f-2b152d8bd143",
+          "coordinateVersion": "v1",
+          "endFrame": 0,
+          "endTime": 0,
+          "frame": 0,
+          "itemLinks": [],
+          "objectId": "1",
+          "openAnnotationVersion": "1.74.2-rc.1",
+          "recipeId": "65e077d9c860f84eb0619277",
+          "snapshots_": [],
+          "startTime": 0,
+          "system": false
+        },
+        "user": {}
+      },
+      "creator": "daniel.f@dataloop.ai",
+      "createdAt": "2024-08-13T07:46:33.787Z",
+      "updatedBy": "daniel.f@dataloop.ai",
+      "updatedAt": "2024-08-13T07:46:33.787Z",
+      "hash": "bc6e12f035361dc7040e6baea64308f9163140ec",
+      "source": "ui"
+    },
+    {
+      "id": "66bb0f590482e66b66147913",
+      "datasetId": "66bb0f5823de7288c537ce4c",
+      "itemId": "66bb0f59d07c64287b65918f",
+      "url": "https://rc-gate.dataloop.ai/api/v1/annotations/66bb0f590482e66b66147913",
+      "item": "https://rc-gate.dataloop.ai/api/v1/items/66bb0f59d07c64287b65918f",
+      "dataset": "https://rc-gate.dataloop.ai/api/v1/datasets/66bb0f5823de7288c537ce4c",
+      "type": "box",
+      "label": "bird",
+      "coordinates": [
+        {
+          "x": 93.0416030883789,
+          "y": 598.8785400390625,
+          "z": 0
+        },
+        {
+          "x": 569.4397583007812,
+          "y": 1077.7734375,
+          "z": 0
+        }
+      ],
+      "metadata": {
+        "system": {
+          "automated": true,
+          "coordinateVersion": "v2",
+          "model": {
+            "confidence": 0.9319572448730469,
+            "model_id": "65df2f66b0f25c0feee551ca",
+            "name": "yolov8-large"
+          }
+        },
+        "user": {
+          "model": {
+            "confidence": 0.9319572448730469,
+            "model_id": "65df2f66b0f25c0feee551ca",
+            "name": "yolov8-large"
+          }
+        }
+      },
+      "creator": "bot.0a9fc810-c3d6-42af-aadb-8da7dbd64146@bot.dataloop.ai",
+      "createdAt": "2024-08-13T07:46:33.787Z",
+      "updatedBy": "bot.0a9fc810-c3d6-42af-aadb-8da7dbd64146@bot.dataloop.ai",
+      "updatedAt": "2024-08-13T07:46:33.787Z",
+      "hash": "50018e5d6864f42aa97e8a019c87d53e657fa67b",
+      "source": "sdk"
+    }
+  ],
+  "annotationsCount": 2,
+  "annotated": true
+}
