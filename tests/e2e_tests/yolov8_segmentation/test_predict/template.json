@@ -84,7 +84,7 @@
           "io": "output"
         }
       ],
-      "name": "YOLOv8 Predict",
+      "name": "YOLOv8 Seg Predict",
       "type": "ml",
       "namespace": {
         "functionName": "predict",

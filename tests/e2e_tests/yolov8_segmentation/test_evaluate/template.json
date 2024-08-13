@@ -105,7 +105,7 @@
           "io": "output"
         }
       ],
-      "name": "YOLOv8 Evaluate",
+      "name": "YOLOv8 Seg Evaluate",
       "type": "ml",
       "namespace": {
         "functionName": "evaluate",

@@ -59,7 +59,7 @@
           "io": "output"
         }
       ],
-      "name": "YOLOv8 Train",
+      "name": "YOLOv8 Seg Train",
       "type": "ml",
       "namespace": {
         "functionName": "train",

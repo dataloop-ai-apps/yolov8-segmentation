@@ -20,6 +20,6 @@ variables:
             resource_type: datasets
             entity_field: id
     model:
-        yolov8:
+        yolov8-segmentation:
             resource_type: models
             entity_field: id
