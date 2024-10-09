@@ -1,9 +1,9 @@
 {
-  "id": "66bb0f5e84fee5e9fa7e9ac7",
-  "datasetId": "66bb0f5823de7288c537ce4c",
-  "url": "https://rc-gate.dataloop.ai/api/v1/items/66bb0f5e84fee5e9fa7e9ac7",
-  "dataset": "https://rc-gate.dataloop.ai/api/v1/datasets/66bb0f5823de7288c537ce4c",
-  "createdAt": "2024-08-13T07:46:38.693Z",
+  "id": "6706553f67e9dd846338749d",
+  "datasetId": "67065535a672e900a09ddea5",
+  "url": "https://rc-gate.dataloop.ai/api/v1/items/6706553f67e9dd846338749d",
+  "dataset": "https://rc-gate.dataloop.ai/api/v1/datasets/67065535a672e900a09ddea5",
+  "createdAt": "2024-10-09T10:04:47.076Z",
   "dir": "/",
   "filename": "/ML710241.jpg",
   "type": "file",
@@ -22,24 +22,24 @@
         "train": true
       },
       "taskStatusLog": [],
-      "thumbnailId": "66bb0f6fa3700c1f601a26f0",
+      "thumbnailId": "67065545196aff9f75dfba79",
       "width": 800
     }
   },
   "name": "ML710241.jpg",
-  "creator": "bot.d4c2dc5e-3e60-4e41-8479-528542531376@bot.dataloop.ai",
-  "updatedAt": "2024-08-13T07:46:56.817Z",
+  "creator": "daniel.f@dataloop.ai",
+  "updatedAt": "2024-10-09T10:04:53.698Z",
   "updatedBy": "ofir.g@dataloop.ai",
-  "stream": "https://rc-gate.dataloop.ai/api/v1/items/66bb0f5e84fee5e9fa7e9ac7/stream",
-  "thumbnail": "https://rc-gate.dataloop.ai/api/v1/items/66bb0f5e84fee5e9fa7e9ac7/thumbnail",
+  "stream": "https://rc-gate.dataloop.ai/api/v1/items/6706553f67e9dd846338749d/stream",
+  "thumbnail": "https://rc-gate.dataloop.ai/api/v1/items/6706553f67e9dd846338749d/thumbnail",
   "annotations": [
     {
-      "id": "66bb0f5e488f1307cc3e068e",
-      "datasetId": "66bb0f5823de7288c537ce4c",
-      "itemId": "66bb0f5e84fee5e9fa7e9ac7",
-      "url": "https://rc-gate.dataloop.ai/api/v1/annotations/66bb0f5e488f1307cc3e068e",
-      "item": "https://rc-gate.dataloop.ai/api/v1/items/66bb0f5e84fee5e9fa7e9ac7",
-      "dataset": "https://rc-gate.dataloop.ai/api/v1/datasets/66bb0f5823de7288c537ce4c",
+      "id": "6706553f318b5c08252d89cb",
+      "datasetId": "67065535a672e900a09ddea5",
+      "itemId": "6706553f67e9dd846338749d",
+      "url": "https://rc-gate.dataloop.ai/api/v1/annotations/6706553f318b5c08252d89cb",
+      "item": "https://rc-gate.dataloop.ai/api/v1/items/6706553f67e9dd846338749d",
+      "dataset": "https://rc-gate.dataloop.ai/api/v1/datasets/67065535a672e900a09ddea5",
       "type": "segment",
       "label": "bird",
       "attributes": [],
@@ -167,13 +167,63 @@
         "user": {}
       },
       "creator": "daniel.f@dataloop.ai",
-      "createdAt": "2024-08-13T07:46:38.993Z",
+      "createdAt": "2024-10-09T10:04:47.337Z",
       "updatedBy": "daniel.f@dataloop.ai",
-      "updatedAt": "2024-08-13T07:46:38.993Z",
-      "hash": "db2ee972bbf8b02e05deef8a22f09ef8a2960b78",
+      "updatedAt": "2024-10-09T10:04:47.337Z",
+      "hash": "28352ee398599339b1d6f5cac0eccdcf54c40465",
       "source": "ui"
+    },
+    {
+      "id": "6706553f318b5c49622d89cc",
+      "datasetId": "67065535a672e900a09ddea5",
+      "itemId": "6706553f67e9dd846338749d",
+      "url": "https://rc-gate.dataloop.ai/api/v1/annotations/6706553f318b5c49622d89cc",
+      "item": "https://rc-gate.dataloop.ai/api/v1/items/6706553f67e9dd846338749d",
+      "dataset": "https://rc-gate.dataloop.ai/api/v1/datasets/67065535a672e900a09ddea5",
+      "type": "box",
+      "label": "bird",
+      "attributes": [],
+      "coordinates": [
+        {
+          "x": 45.53466796875,
+          "y": 77.91944122314453,
+          "z": 0
+        },
+        {
+          "x": 633.6395874023438,
+          "y": 399.78607177734375,
+          "z": 0
+        }
+      ],
+      "metadata": {
+        "system": {
+          "attributes": {},
+          "automated": true,
+          "clientId": "d20fff25-801a-432a-b3da-31d20fc694ab",
+          "coordinateVersion": "v2",
+          "endFrame": 1,
+          "endTime": 0,
+          "frame": 0,
+          "isOnlyLocal": false,
+          "isOpen": false,
+          "itemLinks": [],
+          "objectId": "1",
+          "openAnnotationVersion": "1.81.1-rc.29",
+          "recipeId": "670655351991d37efaecc1d6",
+          "snapshots_": [],
+          "startTime": 0,
+          "system": false
+        },
+        "user": {}
+      },
+      "creator": "daniel.f@dataloop.ai",
+      "createdAt": "2024-10-09T10:04:47.337Z",
+      "updatedBy": "ofir.g@dataloop.ai",
+      "updatedAt": "2024-10-09T10:13:24.192Z",
+      "hash": "9867f64c20ee1704e63782e7bf1701f3c032d155",
+      "source": "sdk"
     }
   ],
-  "annotationsCount": 1,
+  "annotationsCount": 2,
   "annotated": true
 }
