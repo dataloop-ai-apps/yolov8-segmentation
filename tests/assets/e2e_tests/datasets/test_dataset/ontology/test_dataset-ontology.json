@@ -1,0 +1,26 @@
+{
+	"id": "67175746302fc227991c43b9",
+	"creator": "ofir.g@dataloop.ai",
+	"title": "test_dataset-ontology",
+	"roots": [
+		{
+			"value": {
+				"tag": "bird",
+				"displayLabel": "bird",
+				"color": "#ff0000",
+				"attributes": [],
+				"displayData": {}
+			},
+			"children": []
+		}
+	],
+	"metadata": {
+		"system": {
+			"projectIds": [
+				null
+			],
+			"system": false
+		},
+		"attributes": []
+	}
+}
