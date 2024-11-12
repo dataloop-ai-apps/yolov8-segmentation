@@ -203,6 +203,7 @@ class Adapter(dl.BaseModelAdapter):
         else:
             raise dl.exceptions.NotFound(f'Model path ({model_filepath}) not found!')
         model.to(device=device)
+        logger.info(f"Model loaded successfully, Device: {model.device}")
         self.model = model
 
     def train(self, data_path, output_path, **kwargs):
