@@ -193,6 +193,7 @@ class Adapter(dl.BaseModelAdapter):
 
     def load(self, local_path, **kwargs):
         model_filename = self.configuration.get('weights_filename', 'yolov8l-seg.pt')
+        device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
         model_filepath = os.path.join(local_path, model_filename) if model_filename not in DEFAULT_WEIGHTS \
             else model_filename
         # first load official model -https://github.com/ultralytics/ultralytics/issues/3856
@@ -201,6 +202,8 @@ class Adapter(dl.BaseModelAdapter):
             model = YOLO(model_filepath)  # pass any model type
         else:
             raise dl.exceptions.NotFound(f'Model path ({model_filepath}) not found!')
+        model.to(device=device)
+        logger.info(f"Model loaded successfully, Device: {model.device}")
         self.model = model
 
     def train(self, data_path, output_path, **kwargs):
@@ -208,12 +211,8 @@ class Adapter(dl.BaseModelAdapter):
         epochs = self.configuration.get('epochs', 50)
         batch_size = self.configuration.get('batch_size', 2)
         imgsz = self.configuration.get('imgsz', 640)
-        device = self.configuration.get('device', None)
         augment = self.configuration.get('augment', False)
         yaml_config = self.configuration.get('yaml_config', dict())
-
-        if device is None:
-            device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
 
         project_name = os.path.dirname(output_path)
         name = os.path.basename(output_path)
@@ -305,7 +304,6 @@ class Adapter(dl.BaseModelAdapter):
                          exist_ok=True,  # this will override the output dir and will not create a new one
                          epochs=epochs,
                          batch=batch_size,
-                         device=device,
                          augment=augment,
                          name=name,
                          workers=0,
@@ -314,46 +312,52 @@ class Adapter(dl.BaseModelAdapter):
 
     def prepare_item_func(self, item):
         filename = item.download(overwrite=True)
-        image = Image.open(filename)
-        # Check if the image has EXIF data
-        if hasattr(image, '_getexif'):
-            exif_data = image._getexif()
-            # Get the EXIF orientation tag (if available)
-            if exif_data is not None:
-                orientation = exif_data.get(0x0112)
-                if orientation is not None:
-                    # Rotate the image based on the orientation tag
-                    if orientation == 3:
-                        image = image.rotate(180, expand=True)
-                    elif orientation == 6:
-                        image = image.rotate(270, expand=True)
-                    elif orientation == 8:
-                        image = image.rotate(90, expand=True)
-        image = image.convert('RGB')
-        return image
+        if 'image' in item.mimetype:
+            data = Image.open(filename)
+            # Check if the image has EXIF data
+            if hasattr(data, '_getexif'):
+                exif_data = data._getexif()
+                # Get the EXIF orientation tag (if available)
+                if exif_data is not None:
+                    orientation = exif_data.get(0x0112)
+                    if orientation is not None:
+                        # Rotate the image based on the orientation tag
+                        if orientation == 3:
+                            data = data.rotate(180, expand=True)
+                        elif orientation == 6:
+                            data = data.rotate(270, expand=True)
+                        elif orientation == 8:
+                            data = data.rotate(90, expand=True)
+            data = data.convert('RGB')
+        else:
+            data = filename
+        return data, item
 
     def predict(self, batch, **kwargs):
+        filtered_streams = list()
+        for stream, item in batch:
+            if 'image' in item.mimetype:
+                filtered_streams.append(stream)
+            else:
+                logger.warning(f'Item {item.id} mimetype is not supported. Skipping item prediction')
+
         inference_args = self.configuration.get("inference_args", {})
         inference_conf = inference_args.get("conf", 0.05)
         inference_iou = inference_args.get("iou", 0.7)
         inference_imgsz = inference_args.get("imgsz", 640)
         inference_precision = inference_args.get("half", False)
-        inference_device = inference_args.get("device", None)
         inference_max_det = inference_args.get("max_det", 300)
         inference_augment = inference_args.get("augment", False)
         inference_agnostic_nms = inference_args.get("agnostic_nms", False)
         inference_classes = inference_args.get("classes", None)
         inference_retina_masks = inference_args.get("retina_masks", False)
-        if inference_device is None:
-            inference_device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
-        results = self.model.predict(source=batch,
+        results = self.model.predict(source=filtered_streams,
                                      save=False,
                                      save_txt=False,  # save predictions as labels
                                      conf=inference_conf,
                                      iou=inference_iou,
                                      imgsz=inference_imgsz,
                                      half=inference_precision,
-                                     device=inference_device,
                                      max_det=inference_max_det,
                                      augment=inference_augment,
                                      agnostic_nms=inference_agnostic_nms,
