@@ -25,7 +25,6 @@ PIL.Image.MAX_IMAGE_PIXELS = 933120000
 DEFAULT_WEIGHTS = ['yolov8l-seg.pt', 'yolov8m-seg.pt', 'yolov8s-seg.pt', 'yolov8n-seg.pt', 'yolov8x-seg.pt']
 
 
-
 @dl.Package.decorators.module(description='Model Adapter for Yolov8 object segmentation',
                               name='model-adapter',
                               init_inputs={'model_entity': dl.Model})
@@ -38,12 +37,12 @@ class Adapter(dl.BaseModelAdapter):
     def move_annotation_files(data_path):
         logger.debug(f"Data path: {data_path}")
         path = Path(data_path)
-        json_files = (path/'json').rglob("*.json")
+        json_files = (path / 'json').rglob("*.json")
         logger.debug(f"Json files: {json_files}")
         img_extensions = ["jpg", "jpeg", "png", "bmp"]
         item_files = []
         for ext in img_extensions:
-            item_files += (path/'items').rglob(f"*.{ext}")
+            item_files += (path / 'items').rglob(f"*.{ext}")
         for src, dst in zip([json_files, item_files], ['json', 'items']):
             for src_file in src:
                 if not os.path.exists(os.path.join(data_path, dst, os.path.basename(src_file))):
@@ -193,14 +192,17 @@ class Adapter(dl.BaseModelAdapter):
 
     def load(self, local_path, **kwargs):
         model_filename = self.configuration.get('weights_filename', 'yolov8l-seg.pt')
-        model_filepath = os.path.join(local_path, model_filename) if model_filename not in DEFAULT_WEIGHTS \
-            else model_filename
-        # first load official model -https://github.com/ultralytics/ultralytics/issues/3856
-        _ = YOLO('yolov8l-seg.pt')
-        if model_filename in DEFAULT_WEIGHTS or os.path.isfile(model_filepath):
+        device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
+        model_filepath = os.path.normpath(os.path.join(local_path, model_filename))
+
+        if os.path.isfile(model_filepath):
             model = YOLO(model_filepath)  # pass any model type
         else:
-            raise dl.exceptions.NotFound(f'Model path ({model_filepath}) not found!')
+            logger.warning(f'Model path ({model_filepath}) not found! loading default model weights')
+            url = 'https://github.com/ultralytics/assets/releases/download/v8.2.0/' + model_filename
+            model = YOLO(url)  # pass any model type
+        model.to(device=device)
+        logger.info(f"Model loaded successfully, Device: {model.device}")
         self.model = model
 
     def train(self, data_path, output_path, **kwargs):
