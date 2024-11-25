@@ -196,7 +196,7 @@ class Adapter(dl.BaseModelAdapter):
         default_weights_path = os.path.join('tmp/app/weights', DEFAULT_WEIGHT)
         if not os.path.isfile(default_weights_path):
             logger.warning(f"Default weights file not found at {default_weights_path}. Using default model.")
-            default_weights_path = model_filename
+            default_weights_path = DEFAULT_WEIGHT
         return default_weights_path
 
     def load(self, local_path, **kwargs):
