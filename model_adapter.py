@@ -22,7 +22,7 @@ logger = logging.getLogger('YOLOv8SegmentationAdapter')
 # set max image size
 PIL.Image.MAX_IMAGE_PIXELS = 933120000
 
-DEFAULT_WEIGHTS = ['yolov8l-seg.pt', 'yolov8m-seg.pt', 'yolov8s-seg.pt', 'yolov8n-seg.pt', 'yolov8x-seg.pt']
+DEFAULT_WEIGHT = 'yolov8l-seg.pt'
 
 
 @dl.Package.decorators.module(description='Model Adapter for Yolov8 object segmentation',
@@ -190,17 +190,26 @@ class Adapter(dl.BaseModelAdapter):
                     with open(annotation_path, 'w') as annotation_file:
                         annotation_file.write('\n'.join(annotations))
 
+    @staticmethod
+    def get_default_weights():
+        # Expected to be at /tmp/app/weights/
+        default_weights_path = os.path.join('tmp/app/weights', DEFAULT_WEIGHT)
+        if not os.path.isfile(default_weights_path):
+            logger.warning(f"Default weights file not found at {default_weights_path}. Using default model.")
+            default_weights_path = model_filename
+        return default_weights_path
+
     def load(self, local_path, **kwargs):
-        model_filename = self.configuration.get('weights_filename', 'yolov8l-seg.pt')
+        model_filename = self.configuration.get('weights_filename', DEFAULT_WEIGHT)
         device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
         model_filepath = os.path.normpath(os.path.join(local_path, model_filename))
 
+        default_weights_path = self.get_default_weights()
+        # Always loading default weights https://github.com/ultralytics/ultralytics/issues/3856
+        model = YOLO(default_weights_path)
         if os.path.isfile(model_filepath):
-            model = YOLO(model_filepath)  # pass any model type
-        else:
-            logger.warning(f'Model path ({model_filepath}) not found! loading default model weights')
-            url = 'https://github.com/ultralytics/assets/releases/download/v8.2.0/' + model_filename
-            model = YOLO(url)  # pass any model type
+            logger.info(f"Custom weights found, loading from {model_filepath}")
+            model = YOLO(model_filepath)
         model.to(device=device)
         logger.info(f"Model loaded successfully, Device: {model.device}")
         self.model = model
