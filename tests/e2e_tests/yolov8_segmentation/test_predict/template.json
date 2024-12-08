@@ -84,13 +84,13 @@
           "io": "output"
         }
       ],
-      "name": "YOLOv8 Seg Predict",
+      "name": "Predict",
       "type": "ml",
       "namespace": {
         "functionName": "predict",
         "projectName": null,
-        "serviceName": "predict-6673de14baf2ad3e2afa9b3a",
-        "moduleName": "yolov8-seg-module",
+        "serviceName": "model-mgmt-app-predict",
+        "moduleName": "model-mgmt-app-predict",
         "packageName": "model-mgmt-app"
       },
       "projectId": null,

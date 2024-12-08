@@ -105,13 +105,13 @@
           "io": "output"
         }
       ],
-      "name": "YOLOv8 Seg Evaluate",
+      "name": "Evaluate",
       "type": "ml",
       "namespace": {
         "functionName": "evaluate",
         "projectName": null,
         "serviceName": "model-mgmt-app-evaluate",
-        "moduleName": "yolov8-seg-module",
+        "moduleName": "model-mgmt-app-evaluate",
         "packageName": "model-mgmt-app"
       },
       "projectId": null,

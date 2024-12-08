@@ -164,7 +164,7 @@
           "io": "output"
         }
       ],
-      "name": "Train Model",
+      "name": "Train",
       "type": "ml",
       "namespace": {
         "functionName": "train",
@@ -229,7 +229,7 @@
           "io": "output"
         }
       ],
-      "name": "Evaluate Model",
+      "name": "Evaluate",
       "type": "ml",
       "namespace": {
         "functionName": "evaluate",
