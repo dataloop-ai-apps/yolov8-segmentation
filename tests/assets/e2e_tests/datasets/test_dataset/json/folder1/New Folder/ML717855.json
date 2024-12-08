@@ -1,0 +1,213 @@
+{
+  "id": "6706553ac394f417868dabd8",
+  "datasetId": "67065535a672e900a09ddea5",
+  "url": "https://rc-gate.dataloop.ai/api/v1/items/6706553ac394f417868dabd8",
+  "dataset": "https://rc-gate.dataloop.ai/api/v1/datasets/67065535a672e900a09ddea5",
+  "createdAt": "2024-10-09T10:04:42.436Z",
+  "dir": "/folder1/New Folder",
+  "filename": "/folder1/New Folder/ML717855.jpg",
+  "type": "file",
+  "hidden": false,
+  "metadata": {
+    "system": {
+      "channels": 3,
+      "encoding": "7bit",
+      "height": 827,
+      "isBinary": true,
+      "mimetype": "image/jpeg",
+      "originalname": "ML717855.jpg",
+      "refs": [],
+      "size": 184177,
+      "tags": {
+        "train": true
+      },
+      "taskStatusLog": [],
+      "thumbnailId": "67065545196aff03e5dfba7a",
+      "width": 1200
+    }
+  },
+  "name": "ML717855.jpg",
+  "creator": "daniel.f@dataloop.ai",
+  "updatedAt": "2024-10-09T10:04:53.718Z",
+  "updatedBy": "ofir.g@dataloop.ai",
+  "stream": "https://rc-gate.dataloop.ai/api/v1/items/6706553ac394f417868dabd8/stream",
+  "thumbnail": "https://rc-gate.dataloop.ai/api/v1/items/6706553ac394f417868dabd8/thumbnail",
+  "annotations": [
+    {
+      "id": "6706553a03d03382b0c1f24e",
+      "datasetId": "67065535a672e900a09ddea5",
+      "itemId": "6706553ac394f417868dabd8",
+      "url": "https://rc-gate.dataloop.ai/api/v1/annotations/6706553a03d03382b0c1f24e",
+      "item": "https://rc-gate.dataloop.ai/api/v1/items/6706553ac394f417868dabd8",
+      "dataset": "https://rc-gate.dataloop.ai/api/v1/datasets/67065535a672e900a09ddea5",
+      "type": "segment",
+      "label": "bird",
+      "attributes": [],
+      "coordinates": [
+        [
+          {
+            "x": 694.4444444444445,
+            "y": 285.18518518518516
+          },
+          {
+            "x": 632.716049382716,
+            "y": 261.7283950617284
+          },
+          {
+            "x": 595.679012345679,
+            "y": 259.25925925925924
+          },
+          {
+            "x": 577.1604938271605,
+            "y": 239.50617283950615
+          },
+          {
+            "x": 532.716049382716,
+            "y": 225.92592592592592
+          },
+          {
+            "x": 427.77777777777777,
+            "y": 229.62962962962962
+          },
+          {
+            "x": 440.12345679012344,
+            "y": 240.74074074074073
+          },
+          {
+            "x": 498.1481481481481,
+            "y": 262.96296296296293
+          },
+          {
+            "x": 474.69135802469134,
+            "y": 303.7037037037037
+          },
+          {
+            "x": 453.7037037037037,
+            "y": 361.72839506172835
+          },
+          {
+            "x": 456.1728395061728,
+            "y": 418.5185185185185
+          },
+          {
+            "x": 456.1728395061728,
+            "y": 479.0123456790123
+          },
+          {
+            "x": 409.25925925925924,
+            "y": 618.5185185185185
+          },
+          {
+            "x": 458.641975308642,
+            "y": 628.395061728395
+          },
+          {
+            "x": 482.09876543209873,
+            "y": 645.679012345679
+          },
+          {
+            "x": 508.02469135802465,
+            "y": 527.1604938271605
+          },
+          {
+            "x": 569.753086419753,
+            "y": 434.5679012345679
+          },
+          {
+            "x": 599.3827160493827,
+            "y": 383.9506172839506
+          },
+          {
+            "x": 610.4938271604938,
+            "y": 317.28395061728395
+          },
+          {
+            "x": 587.037037037037,
+            "y": 286.41975308641975
+          },
+          {
+            "x": 594.4444444444445,
+            "y": 274.0740740740741
+          }
+        ]
+      ],
+      "metadata": {
+        "system": {
+          "attributes": {},
+          "automated": false,
+          "clientId": "fc64a604-8941-4c30-9dff-9966b3d9feba",
+          "coordinateVersion": "v1",
+          "endFrame": 0,
+          "endTime": 0,
+          "frame": 0,
+          "itemLinks": [],
+          "objectId": "1",
+          "openAnnotationVersion": "1.74.2-rc.1",
+          "recipeId": "65e077d9c860f84eb0619277",
+          "snapshots_": [],
+          "startTime": 0,
+          "system": false
+        },
+        "user": {}
+      },
+      "creator": "daniel.f@dataloop.ai",
+      "createdAt": "2024-10-09T10:04:42.704Z",
+      "updatedBy": "daniel.f@dataloop.ai",
+      "updatedAt": "2024-10-09T10:04:42.704Z",
+      "hash": "ae432cb2f55fdf3e51e7595a1e2636dffa487062",
+      "source": "ui"
+    },
+    {
+      "id": "6706553a03d033a71bc1f24f",
+      "datasetId": "67065535a672e900a09ddea5",
+      "itemId": "6706553ac394f417868dabd8",
+      "url": "https://rc-gate.dataloop.ai/api/v1/annotations/6706553a03d033a71bc1f24f",
+      "item": "https://rc-gate.dataloop.ai/api/v1/items/6706553ac394f417868dabd8",
+      "dataset": "https://rc-gate.dataloop.ai/api/v1/datasets/67065535a672e900a09ddea5",
+      "type": "box",
+      "label": "bird",
+      "attributes": [],
+      "coordinates": [
+        {
+          "x": 428.13970947265625,
+          "y": 226.10540771484375,
+          "z": 0
+        },
+        {
+          "x": 691.803466796875,
+          "y": 649.1481323242188,
+          "z": 0
+        }
+      ],
+      "metadata": {
+        "system": {
+          "attributes": {},
+          "automated": true,
+          "clientId": "4a9037d5-b34e-4e6f-9839-bbd208e39a01",
+          "coordinateVersion": "v2",
+          "endFrame": 1,
+          "endTime": 0,
+          "frame": 0,
+          "isOnlyLocal": false,
+          "isOpen": false,
+          "itemLinks": [],
+          "objectId": "1",
+          "openAnnotationVersion": "1.81.1-rc.29",
+          "recipeId": "670655351991d37efaecc1d6",
+          "snapshots_": [],
+          "startTime": 0,
+          "system": false
+        },
+        "user": {}
+      },
+      "creator": "daniel.f@dataloop.ai",
+      "createdAt": "2024-10-09T10:04:42.704Z",
+      "updatedBy": "ofir.g@dataloop.ai",
+      "updatedAt": "2024-10-09T10:15:30.180Z",
+      "hash": "b340417c2d133aa8d093b3a6f7331b36651125b5",
+      "source": "sdk"
+    }
+  ],
+  "annotationsCount": 2,
+  "annotated": true
+}
