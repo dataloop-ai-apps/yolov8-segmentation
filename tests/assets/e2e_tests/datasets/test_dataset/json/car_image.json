@@ -1,0 +1,38 @@
+{
+  "id": "6706553767e9dd774c38747e",
+  "datasetId": "67065535a672e900a09ddea5",
+  "url": "https://rc-gate.dataloop.ai/api/v1/items/6706553767e9dd774c38747e",
+  "dataset": "https://rc-gate.dataloop.ai/api/v1/datasets/67065535a672e900a09ddea5",
+  "createdAt": "2024-10-09T10:04:39.521Z",
+  "dir": "/",
+  "filename": "/car_image.jpeg",
+  "type": "file",
+  "hidden": false,
+  "metadata": {
+    "system": {
+      "channels": 3,
+      "encoding": "7bit",
+      "height": 1024,
+      "isBinary": true,
+      "mimetype": "image/jpeg",
+      "originalname": "car_image.jpeg",
+      "refs": [],
+      "size": 90094,
+      "taskStatusLog": [],
+      "thumbnailId": "67065545196aff6ba0dfba7e",
+      "width": 1024
+    },
+    "tags": {
+      "predict": true
+    }
+  },
+  "name": "car_image.jpeg",
+  "creator": "daniel.f@dataloop.ai",
+  "updatedAt": "2024-10-09T10:04:53.757Z",
+  "updatedBy": "ofir.g@dataloop.ai",
+  "stream": "https://rc-gate.dataloop.ai/api/v1/items/6706553767e9dd774c38747e/stream",
+  "thumbnail": "https://rc-gate.dataloop.ai/api/v1/items/6706553767e9dd774c38747e/thumbnail",
+  "annotations": [],
+  "annotationsCount": 0,
+  "annotated": false
+}
