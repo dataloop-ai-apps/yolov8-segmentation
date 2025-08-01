@@ -1,0 +1,225 @@
+{
+  "id": "6706553894d699f72bf7d195",
+  "datasetId": "67065535a672e900a09ddea5",
+  "url": "https://rc-gate.dataloop.ai/api/v1/items/6706553894d699f72bf7d195",
+  "dataset": "https://rc-gate.dataloop.ai/api/v1/datasets/67065535a672e900a09ddea5",
+  "createdAt": "2024-10-09T10:04:40.510Z",
+  "dir": "/folder1",
+  "filename": "/folder1/ML708810.jpg",
+  "type": "file",
+  "hidden": false,
+  "metadata": {
+    "system": {
+      "channels": 3,
+      "encoding": "7bit",
+      "height": 1200,
+      "isBinary": true,
+      "mimetype": "image/jpeg",
+      "originalname": "ML708810.jpg",
+      "refs": [],
+      "size": 242455,
+      "tags": {
+        "validation": true
+      },
+      "taskStatusLog": [],
+      "thumbnailId": "67065545813e9346a715d410",
+      "width": 940
+    }
+  },
+  "name": "ML708810.jpg",
+  "creator": "daniel.f@dataloop.ai",
+  "updatedAt": "2024-10-09T10:04:53.868Z",
+  "updatedBy": "ofir.g@dataloop.ai",
+  "stream": "https://rc-gate.dataloop.ai/api/v1/items/6706553894d699f72bf7d195/stream",
+  "thumbnail": "https://rc-gate.dataloop.ai/api/v1/items/6706553894d699f72bf7d195/thumbnail",
+  "annotations": [
+    {
+      "id": "6706553803d03320ffc1f244",
+      "datasetId": "67065535a672e900a09ddea5",
+      "itemId": "6706553894d699f72bf7d195",
+      "url": "https://rc-gate.dataloop.ai/api/v1/annotations/6706553803d03320ffc1f244",
+      "item": "https://rc-gate.dataloop.ai/api/v1/items/6706553894d699f72bf7d195",
+      "dataset": "https://rc-gate.dataloop.ai/api/v1/datasets/67065535a672e900a09ddea5",
+      "type": "box",
+      "label": "bird",
+      "attributes": [],
+      "coordinates": [
+        {
+          "x": 93.0416030883789,
+          "y": 598.8785400390625,
+          "z": 0
+        },
+        {
+          "x": 569.4397583007812,
+          "y": 1077.7734375,
+          "z": 0
+        }
+      ],
+      "metadata": {
+        "system": {
+          "attributes": {},
+          "automated": true,
+          "clientId": "3d97df40-5bba-432f-8708-002f663ea557",
+          "coordinateVersion": "v2",
+          "endFrame": 1,
+          "endTime": 0,
+          "frame": 0,
+          "isOnlyLocal": false,
+          "isOpen": false,
+          "itemLinks": [],
+          "objectId": "1",
+          "openAnnotationVersion": "1.81.1-rc.29",
+          "recipeId": "670655351991d37efaecc1d6",
+          "snapshots_": [],
+          "startTime": 0,
+          "system": false
+        },
+        "user": {}
+      },
+      "creator": "daniel.f@dataloop.ai",
+      "createdAt": "2024-10-09T10:04:40.848Z",
+      "updatedBy": "ofir.g@dataloop.ai",
+      "updatedAt": "2024-10-09T10:15:55.859Z",
+      "hash": "d7c0bf7283c46b7fc6bd9ef1cba04afce7bd67d4",
+      "source": "sdk"
+    },
+    {
+      "id": "6706553803d03350aac1f243",
+      "datasetId": "67065535a672e900a09ddea5",
+      "itemId": "6706553894d699f72bf7d195",
+      "url": "https://rc-gate.dataloop.ai/api/v1/annotations/6706553803d03350aac1f243",
+      "item": "https://rc-gate.dataloop.ai/api/v1/items/6706553894d699f72bf7d195",
+      "dataset": "https://rc-gate.dataloop.ai/api/v1/datasets/67065535a672e900a09ddea5",
+      "type": "segment",
+      "label": "bird",
+      "attributes": [],
+      "coordinates": [
+        [
+          {
+            "x": 663.3333333333333,
+            "y": 644.9999999999999
+          },
+          {
+            "x": 538.3333333333333,
+            "y": 621.6666666666666
+          },
+          {
+            "x": 498.3333333333333,
+            "y": 593.3333333333333
+          },
+          {
+            "x": 329.99999999999994,
+            "y": 635
+          },
+          {
+            "x": 315,
+            "y": 664.9999999999999
+          },
+          {
+            "x": 406.66666666666663,
+            "y": 658.3333333333333
+          },
+          {
+            "x": 351.66666666666663,
+            "y": 708.3333333333333
+          },
+          {
+            "x": 349.99999999999994,
+            "y": 708.3333333333333
+          },
+          {
+            "x": 286.66666666666663,
+            "y": 774.9999999999999
+          },
+          {
+            "x": 285,
+            "y": 851.6666666666666
+          },
+          {
+            "x": 199.99999999999997,
+            "y": 951.6666666666666
+          },
+          {
+            "x": 208.33333333333331,
+            "y": 971.6666666666666
+          },
+          {
+            "x": 84.99999999999999,
+            "y": 1048.3333333333333
+          },
+          {
+            "x": 116.66666666666666,
+            "y": 1073.3333333333333
+          },
+          {
+            "x": 116.66666666666666,
+            "y": 1071.6666666666665
+          },
+          {
+            "x": 209.99999999999997,
+            "y": 1013.3333333333333
+          },
+          {
+            "x": 209.99999999999997,
+            "y": 1011.6666666666666
+          },
+          {
+            "x": 261.66666666666663,
+            "y": 1026.6666666666665
+          },
+          {
+            "x": 303.3333333333333,
+            "y": 996.6666666666666
+          },
+          {
+            "x": 351.66666666666663,
+            "y": 1003.3333333333333
+          },
+          {
+            "x": 488.3333333333333,
+            "y": 953.3333333333333
+          },
+          {
+            "x": 561.6666666666666,
+            "y": 856.6666666666666
+          },
+          {
+            "x": 548.3333333333333,
+            "y": 763.3333333333333
+          },
+          {
+            "x": 525,
+            "y": 651.6666666666666
+          }
+        ]
+      ],
+      "metadata": {
+        "system": {
+          "attributes": {},
+          "automated": false,
+          "clientId": "f36b83b3-c89e-4979-815f-2b152d8bd143",
+          "coordinateVersion": "v1",
+          "endFrame": 0,
+          "endTime": 0,
+          "frame": 0,
+          "itemLinks": [],
+          "objectId": "1",
+          "openAnnotationVersion": "1.74.2-rc.1",
+          "recipeId": "65e077d9c860f84eb0619277",
+          "snapshots_": [],
+          "startTime": 0,
+          "system": false
+        },
+        "user": {}
+      },
+      "creator": "daniel.f@dataloop.ai",
+      "createdAt": "2024-10-09T10:04:40.848Z",
+      "updatedBy": "daniel.f@dataloop.ai",
+      "updatedAt": "2024-10-09T10:04:40.848Z",
+      "hash": "0f9655de1cae5185a7883faeea329ec0b98f1924",
+      "source": "ui"
+    }
+  ],
+  "annotationsCount": 2,
+  "annotated": true
+}

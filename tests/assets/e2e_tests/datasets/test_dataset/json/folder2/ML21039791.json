@@ -1,0 +1,301 @@
+{
+  "id": "6706553b94d69934b6f7d19f",
+  "datasetId": "67065535a672e900a09ddea5",
+  "url": "https://rc-gate.dataloop.ai/api/v1/items/6706553b94d69934b6f7d19f",
+  "dataset": "https://rc-gate.dataloop.ai/api/v1/datasets/67065535a672e900a09ddea5",
+  "createdAt": "2024-10-09T10:04:43.003Z",
+  "dir": "/folder2",
+  "filename": "/folder2/ML21039791.jpg",
+  "type": "file",
+  "hidden": false,
+  "metadata": {
+    "system": {
+      "channels": 3,
+      "encoding": "7bit",
+      "height": 529,
+      "isBinary": true,
+      "mimetype": "image/jpeg",
+      "originalname": "ML21039791.jpg",
+      "refs": [],
+      "size": 93291,
+      "tags": {
+        "train": true
+      },
+      "taskStatusLog": [],
+      "thumbnailId": "67065545196aff6e8adfba90",
+      "width": 1000
+    }
+  },
+  "name": "ML21039791.jpg",
+  "creator": "daniel.f@dataloop.ai",
+  "updatedAt": "2024-10-09T10:04:53.850Z",
+  "updatedBy": "ofir.g@dataloop.ai",
+  "stream": "https://rc-gate.dataloop.ai/api/v1/items/6706553b94d69934b6f7d19f/stream",
+  "thumbnail": "https://rc-gate.dataloop.ai/api/v1/items/6706553b94d69934b6f7d19f/thumbnail",
+  "annotations": [
+    {
+      "id": "6706553b318b5c067c2d899b",
+      "datasetId": "67065535a672e900a09ddea5",
+      "itemId": "6706553b94d69934b6f7d19f",
+      "url": "https://rc-gate.dataloop.ai/api/v1/annotations/6706553b318b5c067c2d899b",
+      "item": "https://rc-gate.dataloop.ai/api/v1/items/6706553b94d69934b6f7d19f",
+      "dataset": "https://rc-gate.dataloop.ai/api/v1/datasets/67065535a672e900a09ddea5",
+      "type": "segment",
+      "label": "bird",
+      "attributes": [],
+      "coordinates": [
+        [
+          {
+            "x": 247.9591836734694,
+            "y": 242.3469387755102
+          },
+          {
+            "x": 285.7142857142857,
+            "y": 201.53061224489795
+          },
+          {
+            "x": 365.3061224489796,
+            "y": 155.6122448979592
+          },
+          {
+            "x": 387.7551020408163,
+            "y": 117.85714285714286
+          },
+          {
+            "x": 417.34693877551024,
+            "y": 96.42857142857143
+          },
+          {
+            "x": 497.9591836734694,
+            "y": 73.9795918367347
+          },
+          {
+            "x": 556.1224489795918,
+            "y": 52.55102040816327
+          },
+          {
+            "x": 562.2448979591837,
+            "y": 42.3469387755102
+          },
+          {
+            "x": 568.3673469387755,
+            "y": 48.46938775510204
+          },
+          {
+            "x": 537.7551020408164,
+            "y": 80.10204081632654
+          },
+          {
+            "x": 483.6734693877551,
+            "y": 109.6938775510204
+          },
+          {
+            "x": 489.7959183673469,
+            "y": 183.16326530612244
+          },
+          {
+            "x": 501.0204081632653,
+            "y": 201.53061224489795
+          },
+          {
+            "x": 585.7142857142858,
+            "y": 241.3265306122449
+          },
+          {
+            "x": 643.8775510204082,
+            "y": 293.36734693877554
+          },
+          {
+            "x": 714.2857142857143,
+            "y": 334.18367346938777
+          },
+          {
+            "x": 734.6938775510205,
+            "y": 352.55102040816325
+          },
+          {
+            "x": 773.469387755102,
+            "y": 383.16326530612247
+          },
+          {
+            "x": 801.0204081632653,
+            "y": 402.55102040816325
+          },
+          {
+            "x": 836.7346938775511,
+            "y": 421.9387755102041
+          },
+          {
+            "x": 839.795918367347,
+            "y": 429.0816326530612
+          },
+          {
+            "x": 840.8163265306123,
+            "y": 428.0612244897959
+          },
+          {
+            "x": 930.6122448979592,
+            "y": 476.0204081632653
+          },
+          {
+            "x": 914.2857142857143,
+            "y": 486.2244897959184
+          },
+          {
+            "x": 809.1836734693878,
+            "y": 435.2040816326531
+          },
+          {
+            "x": 810.2040816326531,
+            "y": 435.2040816326531
+          },
+          {
+            "x": 672.4489795918367,
+            "y": 399.48979591836735
+          },
+          {
+            "x": 623.469387755102,
+            "y": 415.81632653061223
+          },
+          {
+            "x": 583.6734693877551,
+            "y": 437.2448979591837
+          },
+          {
+            "x": 570.4081632653061,
+            "y": 429.0816326530612
+          },
+          {
+            "x": 571.4285714285714,
+            "y": 429.0816326530612
+          },
+          {
+            "x": 574.4897959183673,
+            "y": 419.8979591836735
+          },
+          {
+            "x": 542.8571428571429,
+            "y": 414.7959183673469
+          },
+          {
+            "x": 487.7551020408163,
+            "y": 427.0408163265306
+          },
+          {
+            "x": 488.7755102040816,
+            "y": 415.81632653061223
+          },
+          {
+            "x": 524.4897959183673,
+            "y": 409.6938775510204
+          },
+          {
+            "x": 483.6734693877551,
+            "y": 379.0816326530612
+          },
+          {
+            "x": 443.8775510204082,
+            "y": 328.0612244897959
+          },
+          {
+            "x": 412.2448979591837,
+            "y": 244.3877551020408
+          },
+          {
+            "x": 413.265306122449,
+            "y": 227.04081632653063
+          },
+          {
+            "x": 412.2448979591837,
+            "y": 227.04081632653063
+          },
+          {
+            "x": 378.57142857142856,
+            "y": 187.24489795918367
+          },
+          {
+            "x": 356.12244897959187,
+            "y": 184.18367346938777
+          }
+        ]
+      ],
+      "metadata": {
+        "system": {
+          "attributes": {},
+          "automated": false,
+          "clientId": "1a8a9121-a2be-4e84-875e-895233b2ae75",
+          "coordinateVersion": "v1",
+          "endFrame": 0,
+          "endTime": 0,
+          "frame": 0,
+          "itemLinks": [],
+          "objectId": "1",
+          "openAnnotationVersion": "1.74.2-rc.1",
+          "recipeId": "65e077d9c860f84eb0619277",
+          "snapshots_": [],
+          "startTime": 0,
+          "system": false
+        },
+        "user": {}
+      },
+      "creator": "daniel.f@dataloop.ai",
+      "createdAt": "2024-10-09T10:04:43.399Z",
+      "updatedBy": "daniel.f@dataloop.ai",
+      "updatedAt": "2024-10-09T10:04:43.399Z",
+      "hash": "b4bc62e3599b636ed2427b3285e50aea78e657f4",
+      "source": "ui"
+    },
+    {
+      "id": "6706553b318b5c519c2d899c",
+      "datasetId": "67065535a672e900a09ddea5",
+      "itemId": "6706553b94d69934b6f7d19f",
+      "url": "https://rc-gate.dataloop.ai/api/v1/annotations/6706553b318b5c519c2d899c",
+      "item": "https://rc-gate.dataloop.ai/api/v1/items/6706553b94d69934b6f7d19f",
+      "dataset": "https://rc-gate.dataloop.ai/api/v1/datasets/67065535a672e900a09ddea5",
+      "type": "box",
+      "label": "bird",
+      "attributes": [],
+      "coordinates": [
+        {
+          "x": 248.9182586669922,
+          "y": 45.23418045043945,
+          "z": 0
+        },
+        {
+          "x": 928.1985473632812,
+          "y": 487.1733703613281,
+          "z": 0
+        }
+      ],
+      "metadata": {
+        "system": {
+          "attributes": {},
+          "automated": true,
+          "clientId": "18db15cc-d290-4895-b054-f83c6ecbc4ce",
+          "coordinateVersion": "v2",
+          "endFrame": 1,
+          "endTime": 0,
+          "frame": 0,
+          "isOnlyLocal": false,
+          "isOpen": false,
+          "itemLinks": [],
+          "objectId": "1",
+          "openAnnotationVersion": "1.81.1-rc.29",
+          "recipeId": "670655351991d37efaecc1d6",
+          "snapshots_": [],
+          "startTime": 0,
+          "system": false
+        },
+        "user": {}
+      },
+      "creator": "daniel.f@dataloop.ai",
+      "createdAt": "2024-10-09T10:04:43.399Z",
+      "updatedBy": "ofir.g@dataloop.ai",
+      "updatedAt": "2024-10-09T10:15:19.313Z",
+      "hash": "5b198483890ab8bff7e41a5516abafd90ea64411",
+      "source": "sdk"
+    }
+  ],
+  "annotationsCount": 2,
+  "annotated": true
+}
